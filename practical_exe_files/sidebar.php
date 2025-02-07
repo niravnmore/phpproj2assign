@@ -36,18 +36,23 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="" class="nav-link text-white" aria-current="page">
-                Practical Exercises 01
+            <a href="pe07.php" class="nav-link text-white" aria-current="page">
+                Practical Exercises 07
             </a>
         </li>
         <li class="nav-item">
-            <a href="" class="nav-link text-white" aria-current="page">
-                Practical Exercises 01
+            <a href="pe08.php" class="nav-link text-white" aria-current="page">
+                Practical Exercises 08
             </a>
         </li>
         <li class="nav-item">
-            <a href="" class="nav-link text-white" aria-current="page">
-                Practical Exercises 01
+            <a href="pe09.php" class="nav-link text-white" aria-current="page">
+                Practical Exercises 09
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="pe10.php" class="nav-link text-white" aria-current="page">
+                Practical Exercises 10
             </a>
         </li>
         <li class="nav-item">

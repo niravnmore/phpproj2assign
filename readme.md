@@ -669,6 +669,8 @@ $rect2 = new Rectangle(8, 12);  // Custom values
 
 ### Practical Exercise: Create a class with a constructor that initializes properties when an object is created.  
 
+- <a href="./practical_exe_files/pe07.php">Practical Exercise 07</a>
+
 ## Destructor  
 
 ### Q. Explain the role of a destructor in PHP and when it is called. 
@@ -767,6 +769,8 @@ unset($obj); // Destructor is called here to close the file
 ```
 
 ### Practical Exercise: Write a class that implements a destructor to perform cleanup tasks when an object is destroyed.  
+
+- <a href="./practical_exe_files/pe08.php">Practical Exercise 08</a>
 
 ## Magic Methods
 
@@ -963,6 +967,8 @@ unset($obj); // Destructor is called here to close the file
 
 ### Practical Exercise: Create a class that uses magic methods to handle property access and modification dynamically.  
 
+- <a href="./practical_exe_files/pe09.php">Practical Exercise 09</a>
+
 ## Scope Resolution
 
 ### Q. Explain the scope resolution operator (`::`) and its use in PHP.  
@@ -1086,6 +1092,8 @@ unset($obj); // Destructor is called here to close the file
   ```
 
 ### Practical Exercise: Create a class with static properties and methods, and demonstrate their access using the scope resolution operator.  
+
+- <a href="./practical_exe_files/pe10.php">Practical Exercise 10</a>
 
 ## Traits
 
