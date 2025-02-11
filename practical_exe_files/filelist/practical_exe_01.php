@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include './header.php'; ?>
 
 <div class="container m-5 p-5" id="content">
     <?php
@@ -58,4 +58,4 @@
 </main>
 <footer>
     <!-- place footer here -->
-    <?php include 'footer.php'; ?>
+    <?php include './footer.php'; ?>

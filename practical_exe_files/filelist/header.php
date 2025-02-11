@@ -17,7 +17,7 @@
         crossorigin="anonymous" />
 
     <!-- Custom styles for this template -->
-    <link href="./Sidebars · Bootstrap v5.0_files/sidebars.css" rel="stylesheet">
+    <link href="../sidebarscss/sidebars.css" rel="stylesheet">
 </head>
 
 <body>
