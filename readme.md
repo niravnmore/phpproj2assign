@@ -112,7 +112,7 @@
 
 ### Practical Exercise: Create a simple class in PHP that demonstrates encapsulation by using private and public properties and methods.
 
-- <a href="./practical_exe_files/pe01.php">Practical Exercise 01</a>
+- <a href="./practical_exe_files/filelist/practical_exe_01.php">Practical Exercise 01</a>
 
 ## Class
 
@@ -237,7 +237,7 @@ This structured approach makes PHP code more **scalable, reusable, and maintaina
 
 ### Practical Exercise: Write a PHP script to create a class representing a "Car" with properties like make, model, and year, and a method to display the car details.  
 
-- <a href="./practical_exe_files/pe02.php">Practical Exercise 02</a>
+- <a href="./practical_exe_files/filelist/practical_exe_02.php">Practical Exercise 02</a>
 
 ## Object
 
@@ -287,7 +287,7 @@ echo $car1->display(); // Output: Car: Toyota Camry
 
 ### Practical Exercise: Instantiate multiple objects of the "Car" class and demonstrate how to access their properties and methods.  
 
-- <a href="./practical_exe_files/pe03.php">Practical Exercise 03</a>
+- <a href="./practical_exe_files/filelist/practical_exe_03.php">Practical Exercise 03</a>
 
 ## Extends
 
@@ -381,7 +381,7 @@ echo $car->getCarDetails(); // Output: Car: Toyota Camry
 
 ### Practical Exercise: Create a "Vehicle" class and extend it with a "Car" class. Include properties and methods inboth classes, demonstrating inherited behavior.  
 
-- <a href="./practical_exe_files/pe04.php">Practical Exercise 04</a>
+- <a href="./practical_exe_files/filelist/practical_exe_04.php">Practical Exercise 04</a>
 
 ## Overloading
 
@@ -454,7 +454,7 @@ echo MathOperations::multiply(2, 3, 4) . PHP_EOL;      // Output: 24
 
 ### Practical Exercise: Create a class that demonstrates method overloading by defining multiple methods with the same name but different parameters.
 
-- <a href="./practical_exe_files/pe05.php">Practical Exercise 05</a>
+- <a href="./practical_exe_files/filelist/practical_exe_05.php">Practical Exercise 05</a>
 
 ## Abstraction Interface  
 
@@ -581,7 +581,7 @@ echo $car->fuel();  // Output: Using fuel...
 
 ### Practical Exercise: Define an interface named `VehicleInterface` with methods like `start()`, `stop()`, and implement this interface in multiple classes. 
 
-- <a href="./practical_exe_files/pe06.php">Practical Exercise 06</a>
+- <a href="./practical_exe_files/filelist/practical_exe_06.php">Practical Exercise 06</a>
 
 ## Constructor
 
@@ -669,7 +669,7 @@ $rect2 = new Rectangle(8, 12);  // Custom values
 
 ### Practical Exercise: Create a class with a constructor that initializes properties when an object is created.  
 
-- <a href="./practical_exe_files/pe07.php">Practical Exercise 07</a>
+- <a href="./practical_exe_files/filelist/practical_exe_07.php">Practical Exercise 07</a>
 
 ## Destructor  
 
@@ -770,7 +770,7 @@ unset($obj); // Destructor is called here to close the file
 
 ### Practical Exercise: Write a class that implements a destructor to perform cleanup tasks when an object is destroyed.  
 
-- <a href="./practical_exe_files/pe08.php">Practical Exercise 08</a>
+- <a href="./practical_exe_files/filelist/practical_exe_08.php">Practical Exercise 08</a>
 
 ## Magic Methods
 
@@ -967,7 +967,7 @@ unset($obj); // Destructor is called here to close the file
 
 ### Practical Exercise: Create a class that uses magic methods to handle property access and modification dynamically.  
 
-- <a href="./practical_exe_files/pe09.php">Practical Exercise 09</a>
+- <a href="./practical_exe_files/filelist/practical_exe_09.php">Practical Exercise 09</a>
 
 ## Scope Resolution
 
@@ -1093,7 +1093,7 @@ unset($obj); // Destructor is called here to close the file
 
 ### Practical Exercise: Create a class with static properties and methods, and demonstrate their access using the scope resolution operator.  
 
-- <a href="./practical_exe_files/pe10.php">Practical Exercise 10</a>
+- <a href="./practical_exe_files/filelist/practical_exe_10.php">Practical Exercise 10</a>
 
 ## Traits
 
@@ -1311,204 +1311,1214 @@ $obj->callMethods();
 
 ### Practical Exercise: Create two traits and use them in a class to demonstrate how to include multiple behaviors.  
 
+- <a href="./practical_exe_files/filelist/practical_exe_11.php">Practical Exercise 11</a>
+
 ## Visibility
 
 ### Q. Discuss the visibility of properties and methods in PHP (public, private, protected). 
 
+In PHP, **visibility** determines how properties and methods of a class can be accessed. There are three levels of visibility:
+
+---
+
+#### **1. Public**
+- The property or method is accessible from anywhere, including outside the class.
+- This is the default visibility if none is specified.
+- Example:
+```php
+class Example {
+    public $name = "John";
+
+    public function greet() {
+        return "Hello, " . $this->name;
+    }
+}
+
+$obj = new Example();
+echo $obj->name;  // Accessible
+echo $obj->greet();  // Accessible
+```
+
+#### **2. Private**
+- The property or method is accessible **only within the class** where it is declared.
+- It cannot be accessed from outside the class, including child classes.
+- Example:
+```php
+class Example {
+    private $secret = "Hidden";
+
+    private function getSecret() {
+        return $this->secret;
+    }
+
+    public function revealSecret() {
+        return $this->getSecret();
+    }
+}
+
+$obj = new Example();
+// echo $obj->secret;  // ❌ Fatal error
+// echo $obj->getSecret();  // ❌ Fatal error
+echo $obj->revealSecret();  // ✅ Allowed via a public method
+```
+
+#### **3. Protected**
+- The property or method is accessible **within the class** and **by derived (child) classes**, but **not from outside the class**.
+- Example:
+```php
+class ParentClass {
+    protected $message = "Protected Property";
+
+    protected function showMessage() {
+        return $this->message;
+    }
+}
+
+class ChildClass extends ParentClass {
+    public function getMessage() {
+        return $this->showMessage(); // Allowed in subclass
+    }
+}
+
+$obj = new ChildClass();
+// echo $obj->message;  // ❌ Fatal error
+// echo $obj->showMessage();  // ❌ Fatal error
+echo $obj->getMessage();  // ✅ Allowed via public method in subclass
+```
+
+#### **Summary Table**
+
+| Visibility  | Same Class | Derived Class | Outside Class |
+|------------|-----------|--------------|--------------|
+| **Public**   | ✅ Yes  | ✅ Yes  | ✅ Yes  |
+| **Private**  | ✅ Yes  | ❌ No  | ❌ No  |
+| **Protected** | ✅ Yes  | ✅ Yes  | ❌ No  |
+
+---
+
+#### **When to Use Which Visibility?**
+- **Public** → When you need unrestricted access (e.g., utility methods, getters).
+- **Private** → When data should be completely encapsulated (e.g., sensitive information, internal logic).
+- **Protected** → When you want to allow access within the class and subclasses, but prevent direct access from outside.
+
 ### Practical Exercise: Write a class that shows examples of each visibility type and how they restrict access to properties and methods.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_12.php">Practical Exercise 12</a>
 
 ## Type Hinting
 
 ### THEORY EXERCISE: Explain type hinting in PHP and its benefits.  
 
-### Practical Exercise: Write a method in a class that accepts type-hinted parameters and demonstrate howit works with different data types. 
+#### **Type Hinting in PHP**
+- Type hinting (also called **type declarations**) in PHP is a feature that allows specifying the expected data type of function parameters, return values, and class properties.  
+- It ensures that the provided arguments match the expected types, leading to more robust and error-free code.
+
+#### **1. Type Hinting for Function Parameters**
+- You can specify the expected type for function parameters.
+- Example: Type Hinting for Basic Data Types
+```php
+function addNumbers(int $a, int $b) {
+    return $a + $b;
+}
+
+echo addNumbers(5, 10);  // 15
+// echo addNumbers(5, "10");  // TypeError in strict mode
+```
+
+#### **2. Type Hinting for Return Types**
+- You can also specify the return type of a function.
+- Example: Function Return Type Declaration
+```php
+function getGreeting(string $name): string {
+    return "Hello, " . $name;
+}
+
+echo getGreeting("Ramesh");  // Hello, Ramesh
+```
+
+- If the function does not return the expected type, a `TypeError` will occur.
+
+#### **3. Type Hinting for Class Properties (PHP 7.4+)**
+- PHP 7.4 introduced **typed properties**, allowing type hints for class attributes.
+- Example: Typed Class Properties
+```php
+class User {
+    public int $id;
+    public string $name;
+
+    public function __construct(int $id, string $name) {
+        $this->id = $id;
+        $this->name = $name;
+    }
+}
+
+$user = new User(1, "Ramesh");
+echo $user->name;  // Ramesh
+```
+
+#### **4. Type Hinting for Objects and Arrays**
+- You can enforce that parameters must be specific objects or arrays.
+- Example: Object Type Hinting
+```php
+class Order {
+    public function process(User $user) {
+        echo "Processing order for " . $user->name;
+    }
+}
+
+$order = new Order();
+$user = new User(2, "Ramesh");
+$order->process($user);  // Processing order for Ramesh
+```
+
+- Example: Array Type Hinting
+```php
+function printNames(array $names) {
+    foreach ($names as $name) {
+        echo $name . "\n";
+    }
+}
+
+printNames(["Nirav", "More"]);  // Works fine
+```
+
+#### **5. Nullable Types (PHP 7.1+)**
+- You can allow `null` values by using a question mark `?` before the type.
+- Example: Nullable Type Hinting
+```php
+function setAge(?int $age) {
+    return $age ?? "Age not provided";
+}
+
+echo setAge(25);  // 25
+echo setAge(null);  // Age not provided
+```
+
+#### **6. Union Types (PHP 8.0+)**
+- PHP 8.0 introduced **union types**, allowing multiple possible types.
+- Example: Union Type Hinting
+```php
+function getData(int|string $value): string {
+    return "Value: " . $value;
+}
+
+echo getData(10);  // Value: 10
+echo getData("Hello");  // Value: Hello
+```
+
+#### **7. Mixed Type (PHP 8.0+)**
+- `mixed` is a special type that accepts any value.
+- Example: Using `mixed`
+```php
+function processData(mixed $data) {
+    if (is_array($data)) {
+        return "Array provided";
+    }
+    return "Data: " . $data;
+}
+
+echo processData(["PHP", "Type Hinting"]);  // Array provided
+echo processData(100);  // Data: 100
+```
+
+#### **Benefits of Type Hinting**
+- **Error Prevention:** Prevents unintended data type mismatches.  
+- **Code Readability:** Makes it clear what data type is expected.  
+- **Better Debugging:** Catches type errors early.  
+- **Performance Optimization:** Helps PHP optimize function calls.  
+- **Easier Refactoring:** Reduces the risk of breaking changes.  
+
+### Practical Exercise: Write a method in a class that accepts type-hinted parameters and demonstrate how it works with different data types. 
+
+- <a href="./practical_exe_files/filelist/practical_exe_13.php">Practical Exercise 13</a>
 
 ## Final Keyword
 
 ### THEORY EXERCISE: Discuss the purpose of the final keyword in PHP and how it affects classes and methods.  
 
+- In PHP, the `final` keyword is used to prevent further modification of classes and methods.  
+- It ensures that certain parts of the code remain unchanged by subclasses, providing a way to enforce immutability and maintain code integrity.
+
+#### **Usage of `final` in PHP**
+**1. `final` with Methods**  
+
+- When a method is declared as `final`, it cannot be overridden by any subclass.  
+- This is useful when you want to enforce specific behavior in a parent class that must remain unchanged.
+- Example:
+```php
+class Base {
+    final public function importantFunction() {
+        echo "This function cannot be overridden.";
+    }
+}
+
+class Derived extends Base {
+    // Attempting to override will result in a fatal error
+    // public function importantFunction() {
+    //     echo "Trying to override";
+    // }
+}
+```
+- If you try to override `importantFunction()` in the `Derived` class, PHP will throw a **Fatal Error**.
+
+**2. `final` with Classes**
+- When a class is declared as `final`, it cannot be extended (inherited) by any other class.  
+- This ensures that the class's functionality remains unchanged.
+- Example:
+```php
+final class Utility {
+    public function helperFunction() {
+        echo "This class cannot be extended.";
+    }
+}
+
+// This will cause a Fatal Error
+// class ExtendedUtility extends Utility {
+// }
+```
+- Since `Utility` is marked as `final`, attempting to create a subclass (`ExtendedUtility`) results in a **Fatal Error**.
+
+#### **Why Use `final`?**
+- **Prevents Inheritance Issues**: Stops unintended modifications in child classes that could break functionality.
+- **Enhances Security**: Ensures that critical methods remain unchanged.
+- **Improves Performance**: Helps PHP's optimizer by reducing the complexity of method resolution.
+
+However, overusing `final` can reduce flexibility, making code less extendable. It is best used when you want to enforce strict behavior in core logic.
+
 ### Practical Exercise: Create a class marked as final and attempt to extend it to show the restriction. 
+
+- <a href="./practical_exe_files/filelist/practical_exe_14.php">Practical Exercise 14</a>
 
 ## Email Security Function
 
-### THEORY EXERCISE: Explain the importance of email security and common practices to ensure secure email transmission. 
+### THEORY EXERCISE: Explain the importance of email security and common practices to ensure secure email transmission.  
+
+#### **Importance of Email Security**  
+- Email security is crucial because emails are a primary communication method for individuals and businesses, often containing sensitive data, financial information, or authentication credentials. 
+- Poor email security can lead to:  
+    - **Phishing Attacks** – Hackers use fake emails to steal sensitive information.  
+    - **Data Breaches** – Unencrypted emails can be intercepted, exposing confidential data.  
+    - **Malware & Ransomware** – Malicious attachments or links can infect systems.  
+    - **Spoofing & Identity Theft** – Attackers can forge email addresses to impersonate legitimate senders.  
+
+#### **Common Practices for Secure Email Transmission**  
+**1. Use Strong Authentication Methods**  
+- Implement **Multi-Factor Authentication (MFA)** to add an extra security layer beyond passwords.  
+- Use **strong, unique passwords** and update them regularly.  
+
+**2. Encrypt Emails for Confidentiality**  
+- **TLS Encryption (Transport Layer Security)**: Ensures emails are encrypted during transmission.  
+- **End-to-End Encryption (PGP or S/MIME)**: Protects emails from being read by unauthorized parties.  
+
+**3. Enable Email Security Protocols**  
+- **SPF (Sender Policy Framework)**: Prevents spoofing by verifying sender IP addresses.  
+- **DKIM (DomainKeys Identified Mail)**: Ensures email integrity by adding a digital signature.  
+- **DMARC (Domain-based Message Authentication, Reporting & Conformance)**: Protects against phishing by enforcing SPF and DKIM policies.  
+
+**4. Beware of Phishing and Social Engineering**  
+- Do **not click on suspicious links or attachments** from unknown senders.  
+- Verify email sender authenticity, especially for financial transactions.  
+
+**5. Secure Your Email Server**  
+- Keep mail server software **updated** to patch security vulnerabilities.  
+- Use **firewalls and anti-malware tools** to protect email infrastructure.  
+- Implement **rate-limiting and filtering** to prevent spam and DDoS attacks.  
+
+**6. Use a Secure Email Provider**  
+- Choose an email provider that supports **strong encryption** and **advanced security features** like Google Workspace or ProtonMail.  
+
+**7. Regularly Monitor and Train Employees**  
+- Conduct **security awareness training** to help users identify threats.  
+- Implement **email logging and monitoring** for suspicious activities.  
+
+By following these best practices, organizations and individuals can significantly reduce the risks associated with email-based threats.
 
 ### Practical Exercise: Write a function that sanitizes email input and validates it before sending. 
+
+- <a href="./practical_exe_files/filelist/practical_exe_15.php">Practical Exercise 15</a>
 
 ## File Handling
 
 ### THEORY EXERCISE: Discuss file handling in PHP, including opening, reading, writing, and closing files.  
 
+#### **File Handling in PHP**  
+- File handling in PHP allows you to create, read, write, and manage files on the server.  
+- PHP provides built-in functions to perform these operations efficiently.
+
+#### **1. Opening a File (`fopen()`)**  
+- To work with a file, you first need to open it using `fopen()`.  
+- This function requires two parameters:  
+    - **Filename**: The file to be opened.  
+    - **Mode**: The file operation mode (read, write, append, etc.).  
+
+#### **File Opening Modes:**
+| Mode  | Description |
+|--------|-------------|
+| `"r"`  | Read-only. File must exist. |
+| `"r+"` | Read & write. File must exist. |
+| `"w"`  | Write-only. Creates a new file or truncates an existing one. |
+| `"w+"` | Read & write. Creates a new file or truncates an existing one. |
+| `"a"`  | Append. Creates a file if it doesn’t exist. |
+| `"a+"` | Read & append. Creates a file if it doesn’t exist. |
+| `"x"`  | Write-only. Fails if the file exists. |
+| `"x+"` | Read & write. Fails if the file exists. |
+
+#### **Example: Opening a File**
+```php
+<?php
+$file = fopen("example.txt", "r") or die("Unable to open file!");
+?>
+```
+
+#### **2. Reading a File**
+- PHP provides several functions to read file content:  
+- **`fread()` – Read a Specific Number of Bytes**
+```php
+<?php
+$file = fopen("example.txt", "r");
+$content = fread($file, filesize("example.txt"));
+echo $content;
+fclose($file);
+?>
+```
+
+- **`fgets()` – Read One Line at a Time**
+```php
+<?php
+$file = fopen("example.txt", "r");
+while (!feof($file)) {
+    echo fgets($file) . "<br>";
+}
+fclose($file);
+?>
+```
+
+#### **`file_get_contents()` – Read the Whole File into a String**
+```php
+<?php
+$content = file_get_contents("example.txt");
+echo $content;
+?>
+```
+
+#### **3. Writing to a File**
+To write to a file, use `fwrite()` or `file_put_contents()`.
+
+#### **`fwrite()` – Write Data to a File**
+```php
+<?php
+$file = fopen("example.txt", "w");
+fwrite($file, "Hello, World!\n");
+fclose($file);
+?>
+```
+- `"w"` mode will erase existing content. Use `"a"` mode to append.
+
+#### **`file_put_contents()` – Write Directly**
+```php
+<?php
+file_put_contents("example.txt", "New content here!");
+?>
+```
+
+#### **4. Closing a File (`fclose()`)**
+Always close a file after reading or writing to free system resources.
+
+```php
+<?php
+$file = fopen("example.txt", "r");
+fclose($file);
+?>
+```
+
+#### **5. Checking if a File Exists (`file_exists()`)**
+```php
+<?php
+if (file_exists("example.txt")) {
+    echo "File exists.";
+} else {
+    echo "File does not exist.";
+}
+?>
+```
+
+#### **6. Deleting a File (`unlink()`)**
+```php
+<?php
+if (file_exists("example.txt")) {
+    unlink("example.txt");
+    echo "File deleted.";
+} else {
+    echo "File does not exist.";
+}
+?>
+```
+
+- PHP provides powerful file-handling functions to open, read, write, and close files efficiently.  
+- Always handle files carefully, especially when writing or deleting, to avoid data loss.
+
 ### Practical Exercise: Create a script that reads from a text file and displays its content on a web page.
+
+- <a href="./practical_exe_files/filelist/practical_exe_16.php">Practical Exercise 16</a>
 
 ## Handling Emails
 
 ### THEORY EXERCISE: Explain how to send emails in PHP using the mail() function and the importance of validating email addresses.  
 
+#### **Sending Emails in PHP Using the `mail()` Function**  
+
+- PHP provides the `mail()` function for sending emails, but it requires a properly configured mail server (such as **Sendmail**, **Postfix**, or **SMTP**) to work correctly.
+
+#### **1. Basic Syntax of `mail()`**
+```php
+mail(to, subject, message, headers, parameters);
+```
+- **to** – Recipient's email address  
+- **subject** – Subject of the email  
+- **message** – Email body  
+- **headers** – Additional email headers (e.g., `From`, `Reply-To`)  
+- **parameters** – Optional, used to specify additional options  
+
+#### **2. Example: Sending a Basic Email**
+```php
+<?php
+$to = "recipient@example.com";
+$subject = "Test Email";
+$message = "Hello, this is a test email from PHP.";
+$headers = "From: sender@example.com";
+
+if (mail($to, $subject, $message, $headers)) {
+    echo "Email sent successfully!";
+} else {
+    echo "Failed to send email.";
+}
+?>
+```
+
+- The `mail()` function does not return an error message if the email fails to send.
+- It requires a working mail server.
+
+#### **3. Using Additional Headers**
+- You can add extra headers, such as `Reply-To`, `CC`, `BCC`, and `Content-Type`:
+```php
+<?php
+$to = "recipient@example.com";
+$subject = "HTML Email Test";
+$message = "<h1>Hello!</h1><p>This is an <b>HTML</b> email.</p>";
+
+$headers = "MIME-Version: 1.0" . "\r\n";
+$headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
+$headers .= "From: sender@example.com" . "\r\n";
+$headers .= "Reply-To: reply@example.com" . "\r\n";
+$headers .= "CC: cc@example.com" . "\r\n";
+$headers .= "BCC: bcc@example.com" . "\r\n";
+
+if (mail($to, $subject, $message, $headers)) {
+    echo "HTML Email sent successfully!";
+} else {
+    echo "Failed to send email.";
+}
+?>
+```
+
+- Setting `"MIME-Version: 1.0"` and `"Content-type: text/html"` allows sending HTML emails.
+- `Reply-To`, `CC`, and `BCC` add more functionality.
+
+#### **4. Validating Email Addresses**
+- To prevent email spoofing and errors, always validate email addresses before sending.
+
+#### **Using `filter_var()` to Validate an Email**
+```php
+<?php
+$email = "user@example.com";
+
+if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "Valid email address.";
+} else {
+    echo "Invalid email address.";
+}
+?>
+```
+**Why is Email Validation Important?**
+- Prevents sending emails to invalid addresses.
+- Reduces the chance of being marked as spam.
+- Improves reliability and security.
+
+#### **5. Using PHPMailer for Advanced Emailing (Recommended)**
+- The `mail()` function has limitations, especially for sending emails via SMTP.  - A better alternative is **PHPMailer**, which supports SMTP authentication and attachments.
+
+#### **Install PHPMailer via Composer**
+```sh
+composer require phpmailer/phpmailer
+```
+
+#### **Send Email Using PHPMailer**
+```php
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host = 'smtp.example.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'your_email@example.com';
+    $mail->Password = 'your_password';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+
+    $mail->setFrom('your_email@example.com', 'Your Name');
+    $mail->addAddress('recipient@example.com');
+
+    $mail->isHTML(true);
+    $mail->Subject = 'Test Email with PHPMailer';
+    $mail->Body = '<h1>Hello!</h1><p>This is a test email.</p>';
+
+    $mail->send();
+    echo "Email sent successfully!";
+} catch (Exception $e) {
+    echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+}
+?>
+```
+**Why Use PHPMailer?**
+- Supports SMTP authentication  
+- Allows sending attachments  
+- Better error handling  
+- More secure than `mail()`
+
+**Conclusion**
+- The `mail()` function is useful for simple emails but requires a mail server.  
+- Always **validate email addresses** before sending.  
+- Use **PHPMailer** for advanced email handling, including SMTP authentication and HTML emails.
+
 ### Practical Exercise: Write a PHP script to send a test email to a user using the mail() function.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_17.php">Practical Exercise 17</a>
 
 ## MVC Architecture
 
 ### THEORY EXERCISE: Discuss the Model-View-Controller (MVC) architecture and its advantages in web development.  
 
-### Practical Exercise: Create a simple MVC application that demonstrates the separation of concerns by implementing a basic "User" module with a model, view, and controller. 
+- The **Model-View-Controller (MVC)** architecture is a design pattern used in web development to separate application logic into three interconnected components:  
+    1. **Model** – Handles data and business logic.  
+    2. **View** – Manages the user interface (UI).  
+    3. **Controller** – Handles user input and interacts with the Model and View.  
+
+- This separation makes code modular, maintainable, and scalable.
+
+#### Model (Data & Business Logic)
+- Represents the application's **data structure**.
+- Interacts with the **database** (CRUD operations: Create, Read, Update, Delete).
+- Implements business logic and validation.
+- Example (Model in PHP)  
+
+```php
+class UserModel {
+    private $db;
+
+    public function __construct($dbConnection) {
+        $this->db = $dbConnection;
+    }
+
+    public function getUser($id) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+}
+```
+
+#### View (User Interface)
+- Responsible for displaying data to the user.
+- Renders HTML, CSS, and JavaScript.
+- Does **not contain** business logic.
+- Example (View in PHP)
+```php
+<!-- user_view.php -->
+<h1>User Profile</h1>
+<p>Name: <?php echo $user['name']; ?></p>
+<p>Email: <?php echo $user['email']; ?></p>
+```
+
+#### Controller (Request Handling)
+- Accepts user input (e.g., form submissions, URL requests).
+- Calls the appropriate **Model** to fetch or modify data.
+- Loads the **View** to display the data.
+- Example (Controller in PHP)
+
+```php
+// user_controller.php
+require 'UserModel.php';
+require 'db.php'; // Database connection
+
+$userModel = new UserModel($db);
+$user = $userModel->getUser($_GET['id']);
+
+require 'user_view.php'; // Load the view
+```
+
+**How MVC Works in Web Applications**
+1. **User requests a URL** → `example.com/user/1`
+2. **Controller processes the request** and interacts with the Model.
+3. **Model fetches data** from the database.
+4. **Controller sends data** to the View.
+5. **View renders the response** (HTML page).
+
+#### **Advantages of MVC in Web Development**  
+
+- **Separation of Concerns (SoC)** – Each component handles a specific role, improving maintainability.  
+- **Code Reusability** – Models and Views can be reused in multiple parts of the application.  
+- **Scalability** – Easier to scale applications by adding new models, views, and controllers.  
+- **Easier Collaboration** – Developers can work on different parts of the application simultaneously (e.g., frontend & backend teams).  
+- **Security** – Business logic is separated from the view, reducing direct access to data.  
+- Many PHP frameworks use MVC, such as: **Laravel**, **CodeIgniter**, **Symfony**, **CakePHP** 
+
+#### **Conclusion**
+- MVC is a **powerful architecture** that enhances code **organization, maintainability, and scalability** in web development.  
+- If you're building large applications, using an MVC framework like Laravel can significantly improve development efficiency.
+
+### Practical Exercise: Create a simple MVC application that demonstrates the separation of concerns by implementing a basic "User" module with a model, view, and controller.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_18.php">Practical Exercise 18</a>
 
 ## Practical Example: Implementation of all the OOPs Concepts
 
 ### Practical Exercise: Develop a mini project (e.g., a Library Management System) that utilizes all OOP concepts like classes, inheritance, interfaces, magic methods, etc. 
 
+- <a href="./practical_exe_files/filelist/practical_exe_19.php">Practical Exercise 19</a>
+
 ## Connection with MySQL Database
 
 ### THEORY EXERCISE: Explain how to connect PHP to a MySQL database using mysqli or PDO. 
 
+# **Connecting PHP to a MySQL Database Using `mysqli` and `PDO`**  
+
+To connect PHP to a MySQL database, you can use **`mysqli`** (MySQL Improved) or **`PDO`** (PHP Data Objects). Both approaches allow executing SQL queries, retrieving data, and managing transactions.
+
+---
+
+## **1. Connecting Using `mysqli` (Procedural & Object-Oriented)**
+The **`mysqli`** extension provides two ways to connect:  
+- **Procedural Style**  
+- **Object-Oriented Style**
+
+### **🔹 (A) `mysqli` Procedural Connection**
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $database);
+
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+echo "Connected successfully!";
+?>
+```
+**✅ Pros:** Simple and easy to use.  
+**❌ Cons:** Less secure and harder to maintain in large projects.
+
+---
+
+### **🔹 (B) `mysqli` Object-Oriented Connection**
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully!";
+?>
+```
+**✅ Pros:** More structured and reusable.  
+**❌ Cons:** Still limited compared to `PDO`.
+
+---
+
+## **2. Connecting Using `PDO` (Preferred for Security & Flexibility)**
+The **`PDO` (PHP Data Objects)** extension provides a more secure, flexible, and object-oriented approach.
+
+### **🔹 (A) `PDO` Connection**
+```php
+<?php
+$dsn = "mysql:host=localhost;dbname=test_db;charset=utf8mb4";
+$username = "root";
+$password = "";
+
+try {
+    $pdo = new PDO($dsn, $username, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,  // Enable error reporting
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,  // Fetch results as associative array
+        PDO::ATTR_EMULATE_PREPARES => false,  // Prevent SQL injection
+    ]);
+    echo "Connected successfully!";
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?>
+```
+**✅ Pros:**  
+- Supports multiple databases (MySQL, PostgreSQL, SQLite, etc.).  
+- More secure (prevents SQL injection by default).  
+- Better error handling and prepared statements.
+
+**❌ Cons:** Slightly more complex than `mysqli`.
+
+---
+
+## **3. Executing Queries (`mysqli` vs. `PDO`)**
+### **🔹 (A) Inserting Data**
+#### **`mysqli` Procedural**
+```php
+$sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
+mysqli_query($conn, $sql);
+```
+
+#### **`mysqli` Object-Oriented**
+```php
+$sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
+$conn->query($sql);
+```
+
+#### **`PDO` (More Secure)**
+```php
+$stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
+$stmt->execute(['name' => 'John Doe', 'email' => 'john@example.com']);
+```
+
+---
+
+### **🔹 (B) Fetching Data**
+#### **`mysqli` Procedural**
+```php
+$result = mysqli_query($conn, "SELECT * FROM users");
+while ($row = mysqli_fetch_assoc($result)) {
+    echo $row['name'] . "<br>";
+}
+```
+
+#### **`mysqli` Object-Oriented**
+```php
+$result = $conn->query("SELECT * FROM users");
+while ($row = $result->fetch_assoc()) {
+    echo $row['name'] . "<br>";
+}
+```
+
+#### **`PDO` (Preferred)**
+```php
+$stmt = $pdo->query("SELECT * FROM users");
+foreach ($stmt as $row) {
+    echo $row['name'] . "<br>";
+}
+```
+
+---
+
+## **4. Closing the Connection**
+### **`mysqli`**
+```php
+mysqli_close($conn); // Procedural
+$conn->close(); // Object-Oriented
+```
+### **`PDO`**
+```php
+$pdo = null; // Simply set it to null
+```
+
+---
+
+## **5. Why Choose `PDO` Over `mysqli`?**
+| Feature | `mysqli` | `PDO` |
+|---------|---------|-------|
+| Database Support | Only MySQL | Supports multiple databases (MySQL, PostgreSQL, SQLite, etc.) |
+| Security | Requires manual escaping | Uses prepared statements (prevents SQL injection) |
+| Object-Oriented | Yes | Yes (More structured) |
+| Error Handling | Basic error handling | Exception-based error handling |
+| Performance | Similar for MySQL | Slightly better for complex queries |
+
+**🎯 **Recommendation:** Use `PDO` for better security, flexibility, and multi-database support.**
+
+---
+
+## **Conclusion**
+- **`mysqli`** is good for simple MySQL applications but lacks flexibility.  
+- **`PDO`** is the recommended choice due to **better security, multi-database support, and prepared statements**.  
+
 ### Practical Exercise: Write a script to establish a database connection and handle any errors during the connection process.
+
+- <a href="./practical_exe_files/filelist/practical_exe_20.php">Practical Exercise 20</a>
 
 ## SQL Injection
 
 ### THEORY EXERCISE: Define SQL injection and its implications on security. 
 
+#### **SQL Injection and Its Security Implications**  
+
+- SQL Injection (**SQLi**) is a **cyber attack** where an attacker manipulates SQL queries by injecting **malicious SQL code** into input fields (such as login forms, search boxes, or URL parameters).  
+- This allows attackers to **bypass authentication**, **access sensitive data**, **modify databases**, and even **execute system commands**.
+
+#### **2. How SQL Injection Works**
+- SQL Injection occurs when user inputs are **directly included in SQL queries** without proper validation or sanitization.  
+- Attackers exploit **vulnerable input fields** to inject malicious SQL statements.
+
+#### **Example of a Vulnerable PHP Code (Using `mysqli`)**
+
+```php
+<?php
+$conn = new mysqli("localhost", "root", "", "test_db");
+
+$username = $_GET['username']; // User input from URL: ?username=admin
+$password = $_GET['password'];
+
+$sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    echo "Login successful!";
+} else {
+    echo "Invalid credentials!";
+}
+?>
+```
+
+#### **🚨 SQL Injection Attack**
+An attacker can input:
+```
+username=admin' -- 
+password=anything
+```
+This modifies the SQL query as:
+```sql
+SELECT * FROM users WHERE username = 'admin' -- ' AND password = 'anything'
+```
+The `--` comments out the rest of the query, allowing the attacker to log in **without a valid password**.
+
+---
+
+## **3. Consequences of SQL Injection**
+✅ **Bypassing Authentication** – Attackers can gain unauthorized access.  
+✅ **Data Theft** – Sensitive information (emails, passwords, credit card details) can be exposed.  
+✅ **Data Manipulation** – Hackers can modify, delete, or insert data.  
+✅ **Database Corruption** – Attackers can delete entire tables (`DROP TABLE users`).  
+✅ **System Takeover** – In extreme cases, attackers can execute system commands, gaining full control of the server.
+
+---
+
+## **4. Preventing SQL Injection**
+### **🔹 (A) Use Prepared Statements (Parameterized Queries)**
+Prepared statements **separate SQL logic from user input**, preventing malicious injection.
+
+#### **✅ Secure PHP Code (Using `mysqli` Prepared Statements)**
+```php
+<?php
+$conn = new mysqli("localhost", "root", "", "test_db");
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+$stmt->bind_param("ss", $username, $password);
+
+$username = $_GET['username'];
+$password = $_GET['password'];
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    echo "Login successful!";
+} else {
+    echo "Invalid credentials!";
+}
+?>
+```
+
+#### **✅ Secure PHP Code (Using `PDO` Prepared Statements)**
+```php
+<?php
+$pdo = new PDO("mysql:host=localhost;dbname=test_db", "root", "");
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
+$stmt->execute([
+    'username' => $_GET['username'],
+    'password' => $_GET['password']
+]);
+
+if ($stmt->rowCount() > 0) {
+    echo "Login successful!";
+} else {
+    echo "Invalid credentials!";
+}
+?>
+```
+---
+
+### **🔹 (B) Use Input Validation and Sanitization**
+- Ensure input fields contain only **expected values** (e.g., letters and numbers).
+- Remove special characters using `filter_var()`.
+```php
+$username = filter_var($_GET['username'], FILTER_SANITIZE_STRING);
+```
+
+---
+
+### **🔹 (C) Use Least Privilege Database Accounts**
+- Create **database users with minimal privileges** to reduce the impact of an attack.
+- Avoid using **root** access in your database connections.
+
+---
+
+### **🔹 (D) Disable Display of SQL Errors**
+Attackers can exploit detailed error messages. Hide SQL errors in production:
+```php
+ini_set('display_errors', 0);
+error_reporting(0);
+```
+
+---
+
+## **5. Conclusion**
+🚨 **SQL Injection is one of the most dangerous security threats** that can lead to **data theft, unauthorized access, and database destruction**.  
+
+✅ **Prevention Strategies:**  
+- Always **use prepared statements** (`mysqli` or `PDO`).  
+- **Validate and sanitize** user input.  
+- **Use least privilege** database accounts.  
+- **Disable error messages** in production.  
+
 ### Practical Exercise: Demonstrate a vulnerable SQL query and then show how to prevent SQL injection using prepared statements. 
+
+- <a href="./practical_exe_files/filelist/practical_exe_21.php">Practical Exercise 21</a>
 
 ## Practical: Exception Handling with Try-Catch for Database Connection and Queries  
 
+- <a href="./practical_exe_files/filelist/practical_exe_22.php">Practical Exercise 22</a>
+
 ### Practical Exercise: Implement try-catch blocks in a PHP script to handle exceptions for database connection and query execution.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_23.php">Practical Exercise 23</a>
 
 ## Server-Side Validation while Registration using Regular Expressions 
 
 ### Practical Exercise: Write a registration form that validates user input (e.g., email, password) using regular expressions before submission.  
 
+- <a href="./practical_exe_files/filelist/practical_exe_24.php">Practical Exercise 24</a>
+
 ## Send Mail While Registration
 
-### Practical Exercise: Extend the registration form to send a confirmation email upon successful registration. 
+### Practical Exercise: Extend the registration form to send a confirmation email upon successful registration.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_25.php">Practical Exercise 25</a>
 
 ## Session and Cookies
 
 ### THEORY EXERCISE: Explain the differences between sessions and cookies in PHP.
 
-### Practical Exercise: Write a script to create a session and store user data, and then retrieve it on a different page. Also, demonstrate how to set and retrieve a cookie. 
+### Practical Exercise: Write a script to create a session and store user data, and then retrieve it on a different page. Also, demonstrate how to set and retrieve a cookie.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_26.php">Practical Exercise 26</a>
 
 ## File Upload
 
 ### THEORY EXERCISE: Discuss file upload functionality in PHP and its security implications. 
 
-### Practical Exercise: Create a file upload form that allows users to upload files and handle the uploaded files safely on the server. 
+### Practical Exercise: Create a file upload form that allows users to upload files and handle the uploaded files safely on the server.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_27.php">Practical Exercise 27</a>
 
 ## PHP with MVC Architecture
 
 ### Practical Exercise: Implement a CRUD application (Create, Read, Update, Delete) using the MVC architecture to manage user data.  
 
+- <a href="./practical_exe_files/filelist/practical_exe_28.php">Practical Exercise 28</a>
+
 ## Insert, Update, Delete MVC
 
-### Practical Exercise: Extend the CRUD application to include functionalities for inserting, updating, and deleting user records, ensuring proper separation of concerns in the MVC structure. 
+### Practical Exercise: Extend the CRUD application to include functionalities for inserting, updating, and deleting user records, ensuring proper separation of concerns in the MVC structure.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_29.php">Practical Exercise 29</a>
 
 ## Extra Practise for Grade A
 
-### 1. Practical Exercise: Develop a class hierarchy for a simple e-commerce system with classes like `Product`, `Category`, and `Order`. Implement encapsulation by using private properties and public methods to access them. 
+### 1. Practical Exercise: Develop a class hierarchy for a simple e-commerce system with classes like `Product`, `Category`, and `Order`. Implement encapsulation by using private properties and public methods to access them.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_30.php">Practical Exercise 30</a>
 
 ## Class
 
-### 2. Practical Exercise: Create a class called `Book` with properties like `title`, `author`, and `price`. Implement a method to apply a discount to the book's price and return the new price. 
+### 2. Practical Exercise: Create a class called `Book` with properties like `title`, `author`, and `price`. Implement a method to apply a discount to the book's price and return the new price.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_31.php">Practical Exercise 31</a>
 
 ## Object
 
-### 3. Practical Exercise: Instantiate an object of the `Book` class and demonstrate the usage of its methods. Create multiple instances of `Book` and display their details in a formatted manner. 
+### 3. Practical Exercise: Instantiate an object of the `Book` class and demonstrate the usage of its methods. Create multiple instances of `Book` and display their details in a formatted manner.  
+
+- <a href="./practical_exe_files/filelist/practical_exe_32.php">Practical Exercise 32</a>
 
 ## Extends
 
-### 4. Practical Exercise: Create a base class called `Employee` with properties like `name` and `salary`. Extend it with subclasses `FullTimeEmployee` and `PartTimeEmployee`, each having specific methods to calculate bonuses. 
+### 4. Practical Exercise: Create a base class called `Employee` with properties like `name` and `salary`. Extend it with subclasses `FullTimeEmployee` and `PartTimeEmployee`, each having specific methods to calculate bonuses.  
+
+- <a href="./practical_exe_files/pe33.php">Practical Exercise 33</a>
 
 ## Overloading
 
 ### 5. Practical Exercise: Create a `Calculator` class with a method `calculate` that can add, subtract, or multiply based on the number and type of arguments passed. 
 
+- <a href="./practical_exe_files/pe34.php">Practical Exercise 34</a>
+
 ## Abstraction Interface
 
-### 6. Practical Exercise: Define an interface `PaymentInterface` with methods like `processPayment()`, `refund()`, and implement it in classes like `CreditCardPayment` and `PaypalPayment`. 
+### 6. Practical Exercise: Define an interface `PaymentInterface` with methods like `processPayment()`, `refund()`, and implement it in classes like `CreditCardPayment` and `PaypalPayment`.  
+
+- <a href="./practical_exe_files/pe35.php">Practical Exercise 35</a>
 
 ## Constructor
 
-### 7. Practical Exercise: Create a class `Student` with properties like `name`, `age`, and `grade`. Use a constructor to initialize these properties and a method to display student details. 
+### 7. Practical Exercise: Create a class `Student` with properties like `name`, `age`, and `grade`. Use a constructor to initialize these properties and a method to display student details.  
+
+- <a href="./practical_exe_files/pe36.php">Practical Exercise 36</a>
 
 ## Destructor
 
-### 8. Practical Exercise: Write a class that connects to a database, with a destructor that closes the connection when the object is destroyed. 
+### 8. Practical Exercise: Write a class that connects to a database, with a destructor that closes the connection when the object is destroyed.  
+
+- <a href="./practical_exe_files/pe37.php">Practical Exercise 37</a>
 
 ## Magic Methods
 
-### 9. Practical Exercise: Create a class that uses the `__set()` and `__get()` magic methods to dynamically create and access properties based on user input.
+### 9. Practical Exercise: Create a class that uses the `__set()` and `__get()` magic methods to dynamically create and access properties based on user input.  
+
+- <a href="./practical_exe_files/pe38.php">Practical Exercise 38</a>
 
 ## Scope Resolution
 
-### 10. Practical Exercise: Define a class with static properties and methods to keep track of the number of instances created. Use the scope resolution operator to access these static members. 
+### 10. Practical Exercise: Define a class with static properties and methods to keep track of the number of instances created. Use the scope resolution operator to access these static members.  
+
+- <a href="./practical_exe_files/pe39.php">Practical Exercise 39</a>
 
 ## Traits
 
-### 11. Practical Exercise: Create two traits: `Logger` and `Notifier`. Use these traits in a class `User` to log user activities and send notifications. 
+### 11. Practical Exercise: Create two traits: `Logger` and `Notifier`. Use these traits in a class `User` to log user activities and send notifications.  
+
+- <a href="./practical_exe_files/pe40.php">Practical Exercise 40</a>
 
 ## Visibility
 
 ### 12. Practical Exercise: Develop a class `Account` with properties for `username` (public), `password`(private), and `accountBalance` (protected). Demonstrate how to access these properties in a derived class.  
 
+- <a href="./practical_exe_files/pe41.php">Practical Exercise 41</a>
+
 ## Type Hinting
 
-### 13. Practical Exercise: Write a method in a class `Order` that accepts an array of products (type-hinted)and calculates the total order amount. 
+### 13. Practical Exercise: Write a method in a class `Order` that accepts an array of products (type-hinted)and calculates the total order amount.  
+
+- <a href="./practical_exe_files/pe42.php">Practical Exercise 42</a>
 
 ## Final Keyword
 
-### 14. Practical Exercise: Create a base class `Animal` and a final class `Dog`. Attempt to extend `Dog` and demonstrate the restriction imposed by the `final` keyword. 
+### 14. Practical Exercise: Create a base class `Animal` and a final class `Dog`. Attempt to extend `Dog` and demonstrate the restriction imposed by the `final` keyword.  
+
+- <a href="./practical_exe_files/pe43.php">Practical Exercise 43</a>
 
 ## Email Security Function
 
-### 15. Practical Exercise: Write a function that sanitizes user input for an email address, validates it, and throws an exception if it fails validation.
+### 15. Practical Exercise: Write a function that sanitizes user input for an email address, validates it, and throws an exception if it fails validation.  
+
+- <a href="./practical_exe_files/pe44.php">Practical Exercise 44</a>
 
 ## File Handling
 
-### 16. Practical Exercise: Create a script that uploads a file and reads its content. Implement error handling to manage any file-related exceptions.
+### 16. Practical Exercise: Create a script that uploads a file and reads its content. Implement error handling to manage any file-related exceptions.  
+
+- <a href="./practical_exe_files/pe45.php">Practical Exercise 45</a>
 
 ## Handling Emails
 
-### 17. Practical Exercise: Develop a function to send a welcome email to a user upon registration, ensuring the email format is validated first.
+### 17. Practical Exercise: Develop a function to send a welcome email to a user upon registration, ensuring the email format is validated first.  
+
+- <a href="./practical_exe_files/pe46.php">Practical Exercise 46</a>
 
 ## MVC Architecture
 
-### 18. Practical Exercise: Extend the simple MVC application to include a model for managing user profiles, a view for displaying user details, and a controller for handling user actions. 
+### 18. Practical Exercise: Extend the simple MVC application to include a model for managing user profiles, a view for displaying user details, and a controller for handling user actions.  
+
+- <a href="./practical_exe_files/pe47.php">Practical Exercise 47</a>
 
 ## Practical Example: Implementation of all the OOPs Concepts
 
-### 19. Practical Exercise: Develop a project that simulates a library system with classes for User, Book, and Transaction, applying all OOP principles. 
+### 19. Practical Exercise: Develop a project that simulates a library system with classes for User, Book, and Transaction, applying all OOP principles.  
+
+- <a href="./practical_exe_files/pe48.php">Practical Exercise 48</a>
 
 ## Connection with MySQL Database
 
-### 20. Practical Exercise: Write a class `Database` that handles database connections and queries. Use this class in another script to fetch user data from a `users` table. 
+### 20. Practical Exercise: Write a class `Database` that handles database connections and queries. Use this class in another script to fetch user data from a `users` table.  
+
+- <a href="./practical_exe_files/pe49.php">Practical Exercise 49</a>
 
 ## SQL Injection
 
-### 21. Practical Exercise: Create a vulnerable PHP script that demonstrates SQL injection. Then, rewrite it using prepared statements to prevent SQL injection attacks. 
+### 21. Practical Exercise: Create a vulnerable PHP script that demonstrates SQL injection. Then, rewrite it using prepared statements to prevent SQL injection attacks.  
+
+- <a href="./practical_exe_files/pe50.php">Practical Exercise 50</a>
 
 ## Practical: Exception Handling with Try-Catch for Database Connection and Queries
 
 ### 22. Practical Exercise: Implement a complete registration process with a database connection that uses try-catch blocks to handle exceptions for all operations.
 
+- <a href="./practical_exe_files/pe51.php">Practical Exercise 51</a>
+
 ## Server-Side Validation while Registration using Regular Expressions
 
-### 23. Practical Exercise: Write a PHP script that validates user inputs (username, password, email) using regular expressions, providing feedback on any validation errors. 
+### 23. Practical Exercise: Write a PHP script that validates user inputs (username, password, email) using regular expressions, providing feedback on any validation errors.  
+
+- <a href="./practical_exe_files/pe52.php">Practical Exercise 52</a>
 
 ## Send Mail While Registration
 
-### 24. Practical Exercise: Extend the registration process to send a confirmation email to the user after successful registration and validate the email format. 
+### 24. Practical Exercise: Extend the registration process to send a confirmation email to the user after successful registration and validate the email format.  
+
+- <a href="./practical_exe_files/pe53.php">Practical Exercise 53</a>
 
 ## Session and Cookies
 
 ### 25. Practical Exercise: Implement a login system that uses sessions to keep track of user authentication and demonstrates cookie usage for "Remember Me" functionality. 
 
+- <a href="./practical_exe_files/pe54.php">Practical Exercise 54</a>
+
 ## File Upload
 
-### 26. Practical Exercise: Create a file upload feature that allows users to upload images. Ensure that the uploaded images are checked for file type and size for security.
+### 26. Practical Exercise: Create a file upload feature that allows users to upload images. Ensure that the uploaded images are checked for file type and size for security.  
+
+- <a href="./practical_exe_files/pe55.php">Practical Exercise 55</a>
 
 ## PHP with MVC Architecture
 
-### 27. Practical Exercise: Build a small blog application using the MVC architecture, where users can create, read, update, and delete posts. 
+### 27. Practical Exercise: Build a small blog application using the MVC architecture, where users can create, read, update, and delete posts.  
+
+- <a href="./practical_exe_files/pe56.php">Practical Exercise 56</a>
 
 ## Insert, Update, Delete MVC
 
-### 28. Practical Exercise: Expand the blog application to include a feature for user comments, allowing users to insert, update, and delete their comments
+### 28. Practical Exercise: Expand the blog application to include a feature for user comments, allowing users to insert, update, and delete their comments. 
+
+- <a href="./practical_exe_files/pe57.php">Practical Exercise 57</a>
