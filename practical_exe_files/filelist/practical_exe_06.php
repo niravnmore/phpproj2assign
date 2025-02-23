@@ -14,35 +14,29 @@
         public function start();
         public function stop();
     }
-
     class Car implements Vehicle1
     {
         public $brand;
         public $model;
-
         public function __construct($brand, $model)
         {
             $this->brand = $brand;
             $this->model = $model;
         }
-
         public function start()
         {
             return "Car is starting...";
         }
-
         public function stop()
         {
             return "Car is stopping...";
         }
     }
-
     class HeavyVehicle implements Vehicle1
     {
         public $brand;
         public $model;
         public $loadcapacity;
-
         public function __construct($brand, $model, $loadcapacity)
         {
             $this->brand = $brand;
@@ -62,7 +56,6 @@
     $myCar = new Car("Maruti", "Swift");
     echo "<p>" . $myCar->start() . "</p>"; // Output: Car is starting...
     echo "<p>" . $myCar->stop() . "</p>";  // Output: Car is stopping...
-
     $myTruck = new HeavyVehicle("Tata", "4025", "40000");
     echo "<p>" . $myTruck->start() . "</p>"; // Output: Heavy vehicle starting ...
     echo "<p>" . $myTruck->stop() . "</p>"; // Output: Heavy vehicle stopping ...

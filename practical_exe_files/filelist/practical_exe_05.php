@@ -30,15 +30,12 @@
     }
 
     // Examples
-
     $newadd = new AddNumbers();
-
     echo "<p>" . $newadd->add(2) . "</p>";
     echo "<p>" . $newadd->add(25, 35) . "</p>";
     echo "<p>" . $newadd->add(10, 20, 30) . "</p>";
     echo "<p>" . $newadd->add(20, 40, 60, 80) . "</p>";
     echo "<p>" . $newadd->add(15, 25, 35, 45, 55) . "</p>";
-
     ?>
 
 </div>

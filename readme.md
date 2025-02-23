@@ -112,7 +112,52 @@
 
 ### Practical Exercise: Create a simple class in PHP that demonstrates encapsulation by using private and public properties and methods.
 
-- <a href="./practical_exe_files/filelist/practical_exe_01.php">Practical Exercise 01</a>
+```php
+class BankAccount
+{
+    private $accountNumber;
+    private $balance;
+
+    public function __construct($accountNumber, $initialBalance)
+    {
+        $this->accountNumber = $accountNumber;
+        $this->balance = $initialBalance;
+    }
+
+    public function deposit($amount)
+    {
+        if ($amount > 0) {
+            $this->balance += $amount;
+            echo "<p>Deposited: $amount.</p>"; 
+            echo "New Balance: $this->balance</p>";
+        } else {
+            echo "<p>Invalid deposit amount.</p>";
+        }
+    }
+
+    public function withdraw($amount)
+    {
+        if ($amount > 0 && $amount <= $this->balance) {
+            $this->balance -= $amount;
+            echo "<p>Withdrawn: $amount. Remaining Balance: $this->balance</p>";
+        } else {
+            echo "<p>Invalid withdrawal amount or insufficient balance.</p>";
+        }
+    }
+
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+}
+
+// Example usage
+$account = new BankAccount("123456789", 1000);
+echo "<p> New Account created wih Initial Balance: " . $account->getBalance() . "</p>";
+$account->deposit(500);
+$account->withdraw(200);
+echo "<p>Final Balance: " . $account->getBalance() . "</p>";
+```
 
 ## Class
 
@@ -237,7 +282,30 @@ This structured approach makes PHP code more **scalable, reusable, and maintaina
 
 ### Practical Exercise: Write a PHP script to create a class representing a "Car" with properties like make, model, and year, and a method to display the car details.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_02.php">Practical Exercise 02</a>
+```php
+class Car
+    {
+        private $make;
+        private $model;
+        private $year;
+
+        public function __construct($make, $model, $year)
+        {
+            $this->make = $make;
+            $this->model = $model;
+            $this->year = $year;
+        }
+
+        public function displayDetails()
+        {
+            echo "<p>Car Details: $this->year $this->make $this->model</p>";
+        }
+    }
+
+    // Example usage
+    $car1 = new Car("Toyota", "Corolla", 2018);
+    $car1->displayDetails();
+```
 
 ## Object
 
@@ -287,7 +355,35 @@ echo $car1->display(); // Output: Car: Toyota Camry
 
 ### Practical Exercise: Instantiate multiple objects of the "Car" class and demonstrate how to access their properties and methods.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_03.php">Practical Exercise 03</a>
+```php
+class Car
+    {
+        private $make;
+        private $model;
+        private $year;
+        public function __construct($make, $model, $year)
+        {
+            $this->make = $make;
+            $this->model = $model;
+            $this->year = $year;
+        }
+
+        public function displayDetails()
+        {
+            echo "<p>Car Details: $this->year $this->make $this->model</p>";
+        }
+    }
+
+    // Example usage
+    $car1 = new Car("Toyota", "Corolla", 2018);
+    $car1->displayDetails();
+    $car2 = new Car("Honda", "Civic", 2019);
+    $car2->displayDetails();
+    $car3 = new Car("Suzuki", "Swift", 2020);
+    $car3->displayDetails();
+    $car4 = new Car("Hyundai", "Accent", 2021);
+    $car4->displayDetails();
+```
 
 ## Extends
 
@@ -381,7 +477,48 @@ echo $car->getCarDetails(); // Output: Car: Toyota Camry
 
 ### Practical Exercise: Create a "Vehicle" class and extend it with a "Car" class. Include properties and methods inboth classes, demonstrating inherited behavior.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_04.php">Practical Exercise 04</a>
+```php
+class Vehicle
+    {
+        protected $make;
+        protected $model;
+        protected $year;
+        public function __construct($make, $model, $year)
+        {
+            $this->make = $make;
+            $this->model = $model;
+            $this->year = $year;
+        }
+        public function displayDetails()
+        {
+            echo "<p>Vehicle Details: $this->year $this->make $this->model</p>";
+        }
+    }
+
+    class Car extends Vehicle
+    {
+        private $color;
+        public function __construct($make, $model, $year, $color)
+        {
+            parent::__construct($make, $model, $year);
+            $this->color = $color;
+        }
+        public function displayDetails()
+        {
+            echo "<p>Car Details: $this->year $this->make $this->model $this->color</p>";
+        }
+    }
+
+    // Example usage
+    $car1 = new Car("Toyota", "Corolla", 2018, "Red");
+    $car1->displayDetails();        // Car Details: 2018 Toyota Corolla Red
+    $car2 = new Car("Honda", "Civic", 2019, "Blue");
+    $car2->displayDetails();        // Car Details: 2019 Honda Civic Blue
+    $vehicle1 = new Vehicle("Toyota", "Corolla", 2018);
+    $vehicle1->displayDetails();    // Vehicle Details: 2018 Toyota Corolla
+    $vehicle2 = new Vehicle("Honda", "Civic", 2019);
+    $vehicle2->displayDetails();    // Vehicle Details: 2019 Honda Civic
+```
 
 ## Overloading
 
@@ -416,7 +553,6 @@ class Calculator {
 
 // Creating an object
 $calc = new Calculator();
-
 echo $calc->add(10, 20) . PHP_EOL;      // Output: 30
 echo $calc->add(5, 15, 25) . PHP_EOL;   // Output: 45
 echo $calc->add(5) . PHP_EOL;           // Output: Invalid number of arguments!
@@ -454,7 +590,36 @@ echo MathOperations::multiply(2, 3, 4) . PHP_EOL;      // Output: 24
 
 ### Practical Exercise: Create a class that demonstrates method overloading by defining multiple methods with the same name but different parameters.
 
-- <a href="./practical_exe_files/filelist/practical_exe_05.php">Practical Exercise 05</a>
+```php
+class AddNumbers
+    {
+        public function __call($methodname, $args)
+        {
+            if ($methodname == 'add') {
+                switch (count($args)) {
+                    case 2:
+                        return $args[0] + $args[1];
+                    case 3:
+                        return $args[0] + $args[1] + $args[2];
+                    case 4:
+                        return $args[0] + $args[1] + $args[2] + $args[3];
+                    default:
+                        return "Invalid number of arguments";
+                }
+            } else {
+                echo "<p>Method does not exist</p>";
+            }
+        }
+    }
+
+    // Examples
+    $newadd = new AddNumbers();
+    echo "<p>" . $newadd->add(2) . "</p>";                  // Invalid number of arguments
+    echo "<p>" . $newadd->add(25, 35) . "</p>";             // 60
+    echo "<p>" . $newadd->add(10, 20, 30) . "</p>";         // 60
+    echo "<p>" . $newadd->add(20, 40, 60, 80) . "</p>";     // 200
+    echo "<p>" . $newadd->add(15, 25, 35, 45, 55) . "</p>"; // Invalid number of arguments
+```
 
 ## Abstraction Interface  
 
@@ -509,12 +674,10 @@ interface Vehicle {
     public function start();
     public function stop();
 }
-
 class Car implements Vehicle {
     public function start() {
         return "Car is starting...";
     }
-
     public function stop() {
         return "Car is stopping...";
     }
@@ -547,7 +710,6 @@ echo $myCar->stop();  // Output: Car is stopping...
 interface Engine {
     public function start();
 }
-
 abstract class Vehicle {
     abstract public function speed();
 
@@ -555,12 +717,10 @@ abstract class Vehicle {
         return "Using fuel...";
     }
 }
-
 class Car extends Vehicle implements Engine {
     public function start() {
         return "Engine started!";
     }
-
     public function speed() {
         return "Car is moving at 80 km/h";
     }
@@ -579,9 +739,64 @@ echo $car->fuel();  // Output: Using fuel...
 - **Interfaces** define **strict contracts** that enforce method implementation.
 - **Combining both** provides flexibility and maintainability in large applications.
 
+---
+
 ### Practical Exercise: Define an interface named `VehicleInterface` with methods like `start()`, `stop()`, and implement this interface in multiple classes. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_06.php">Practical Exercise 06</a>
+```php
+interface Vehicle
+{
+    public function start();
+    public function stop();
+}
+class Car implements Vehicle
+{
+    public $brand;
+    public $model;
+    public function __construct($brand, $model)
+    {
+        $this->brand = $brand;
+        $this->model = $model;
+    }
+    public function start()
+    {
+        return "Car is starting...";
+    }
+    public function stop()
+    {
+        return "Car is stopping...";
+    }
+}
+class HeavyVehicle implements Vehicle
+{
+    public $brand;
+    public $model;
+    public $loadcapacity;
+    public function __construct($brand, $model, $loadcapacity)
+    {
+        $this->brand = $brand;
+        $this->model = $model;
+        $this->loadcapacity = $loadcapacity;
+    }
+    public function start()
+    {
+        return "Heavy vehicle starting ...";
+    }
+    public function stop()
+    {
+        return "Heavy vehicle stopping ...";
+    }
+}
+// Usage example
+$myCar = new Car("Maruti", "Swift");
+echo "<p>" . $myCar->start() . "</p>"; // Output: Car is starting...
+echo "<p>" . $myCar->stop() . "</p>";  // Output: Car is stopping...
+$myTruck = new HeavyVehicle("Tata", "4025", "40000");
+echo "<p>" . $myTruck->start() . "</p>"; // Output: Heavy vehicle starting ...
+echo "<p>" . $myTruck->stop() . "</p>"; // Output: Heavy vehicle stopping ...
+```
+
+---
 
 ## Constructor
 
@@ -1319,12 +1534,11 @@ $obj->callMethods();
 
 In PHP, **visibility** determines how properties and methods of a class can be accessed. There are three levels of visibility:
 
----
-
 #### **1. Public**
 - The property or method is accessible from anywhere, including outside the class.
 - This is the default visibility if none is specified.
 - Example:
+
 ```php
 class Example {
     public $name = "John";
@@ -1996,18 +2210,18 @@ require 'user_view.php'; // Load the view
 
 ### THEORY EXERCISE: Explain how to connect PHP to a MySQL database using mysqli or PDO. 
 
-# **Connecting PHP to a MySQL Database Using `mysqli` and `PDO`**  
+#### **Connecting PHP to a MySQL Database Using `mysqli` and `PDO`**  
 
-To connect PHP to a MySQL database, you can use **`mysqli`** (MySQL Improved) or **`PDO`** (PHP Data Objects). Both approaches allow executing SQL queries, retrieving data, and managing transactions.
+- To connect PHP to a MySQL database, you can use **`mysqli`** (MySQL Improved) or **`PDO`** (PHP Data Objects).  
+- Both approaches allow executing SQL queries, retrieving data, and managing transactions.
 
----
+#### **1. Connecting Using `mysqli` (Procedural & Object-Oriented)**
+- The **`mysqli`** extension provides two ways to connect:  
+    - **Procedural Style**  
+    - **Object-Oriented Style**
 
-## **1. Connecting Using `mysqli` (Procedural & Object-Oriented)**
-The **`mysqli`** extension provides two ways to connect:  
-- **Procedural Style**  
-- **Object-Oriented Style**
+#### **(A) `mysqli` Procedural Connection**
 
-### **🔹 (A) `mysqli` Procedural Connection**
 ```php
 <?php
 $servername = "localhost";
@@ -2025,12 +2239,11 @@ if (!$conn) {
 echo "Connected successfully!";
 ?>
 ```
+
 **✅ Pros:** Simple and easy to use.  
 **❌ Cons:** Less secure and harder to maintain in large projects.
 
----
-
-### **🔹 (B) `mysqli` Object-Oriented Connection**
+#### **(B) `mysqli` Object-Oriented Connection**
 ```php
 <?php
 $servername = "localhost";
@@ -2051,12 +2264,10 @@ echo "Connected successfully!";
 **✅ Pros:** More structured and reusable.  
 **❌ Cons:** Still limited compared to `PDO`.
 
----
+#### **2. Connecting Using `PDO` (Preferred for Security & Flexibility)**
+- The **`PDO` (PHP Data Objects)** extension provides a more secure, flexible, and object-oriented approach.
 
-## **2. Connecting Using `PDO` (Preferred for Security & Flexibility)**
-The **`PDO` (PHP Data Objects)** extension provides a more secure, flexible, and object-oriented approach.
-
-### **🔹 (A) `PDO` Connection**
+#### **(A) `PDO` Connection**
 ```php
 <?php
 $dsn = "mysql:host=localhost;dbname=test_db;charset=utf8mb4";
@@ -2082,71 +2293,65 @@ try {
 
 **❌ Cons:** Slightly more complex than `mysqli`.
 
----
+#### **3. Executing Queries (`mysqli` vs. `PDO`)**
+- **(A) Inserting Data**
+    - **`mysqli` Procedural**
+        ```php
+        $sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
+        mysqli_query($conn, $sql);
+        ```
+    - **`mysqli` Object-Oriented**
+        ```php
+        $sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
+        $conn->query($sql);
+        ```
+    - **`PDO` (More Secure)**
+        ```php
+        $stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
+        $stmt->execute(['name' => 'John Doe', 'email' => 'john@example.com']);
+        ```
 
-## **3. Executing Queries (`mysqli` vs. `PDO`)**
-### **🔹 (A) Inserting Data**
-#### **`mysqli` Procedural**
-```php
-$sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
-mysqli_query($conn, $sql);
-```
+- **(B) Fetching Data**
+    - **`mysqli` Procedural**
+        ```php
+        $result = mysqli_query($conn, "SELECT * FROM users");
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo $row['name'] . "<br>";
+        }
+        ```
 
-#### **`mysqli` Object-Oriented**
-```php
-$sql = "INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')";
-$conn->query($sql);
-```
+    - **`mysqli` Object-Oriented**
+        ```php
+        $result = $conn->query("SELECT * FROM users");
+        while ($row = $result->fetch_assoc()) {
+            echo $row['name'] . "<br>";
+        }
+        ```
 
-#### **`PDO` (More Secure)**
-```php
-$stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
-$stmt->execute(['name' => 'John Doe', 'email' => 'john@example.com']);
-```
+    - **`PDO` (Preferred)**
+        ```php
+        $stmt = $pdo->query("SELECT * FROM users");
+        foreach ($stmt as $row) {
+            echo $row['name'] . "<br>";
+        }
+        ```
 
----
+#### **4. Closing the Connection**
 
-### **🔹 (B) Fetching Data**
-#### **`mysqli` Procedural**
-```php
-$result = mysqli_query($conn, "SELECT * FROM users");
-while ($row = mysqli_fetch_assoc($result)) {
-    echo $row['name'] . "<br>";
-}
-```
+- **`mysqli`**
 
-#### **`mysqli` Object-Oriented**
-```php
-$result = $conn->query("SELECT * FROM users");
-while ($row = $result->fetch_assoc()) {
-    echo $row['name'] . "<br>";
-}
-```
+    ```php
+    mysqli_close($conn); // Procedural
+    $conn->close(); // Object-Oriented
+    ```
+- **`PDO`**
 
-#### **`PDO` (Preferred)**
-```php
-$stmt = $pdo->query("SELECT * FROM users");
-foreach ($stmt as $row) {
-    echo $row['name'] . "<br>";
-}
-```
+    ```php
+    $pdo = null; // Simply set it to null
+    ```
 
----
+#### **5. Why Choose `PDO` Over `mysqli`?**
 
-## **4. Closing the Connection**
-### **`mysqli`**
-```php
-mysqli_close($conn); // Procedural
-$conn->close(); // Object-Oriented
-```
-### **`PDO`**
-```php
-$pdo = null; // Simply set it to null
-```
-
----
-
-## **5. Why Choose `PDO` Over `mysqli`?**
 | Feature | `mysqli` | `PDO` |
 |---------|---------|-------|
 | Database Support | Only MySQL | Supports multiple databases (MySQL, PostgreSQL, SQLite, etc.) |
@@ -2155,11 +2360,7 @@ $pdo = null; // Simply set it to null
 | Error Handling | Basic error handling | Exception-based error handling |
 | Performance | Similar for MySQL | Slightly better for complex queries |
 
-**🎯 **Recommendation:** Use `PDO` for better security, flexibility, and multi-database support.**
-
----
-
-## **Conclusion**
+- Use `PDO` for better security, flexibility, and multi-database support.**
 - **`mysqli`** is good for simple MySQL applications but lacks flexibility.  
 - **`PDO`** is the recommended choice due to **better security, multi-database support, and prepared statements**.  
 
@@ -2201,103 +2402,93 @@ if ($result->num_rows > 0) {
 ```
 
 #### **🚨 SQL Injection Attack**
-An attacker can input:
+- An attacker can input:
 ```
 username=admin' -- 
 password=anything
 ```
-This modifies the SQL query as:
+- This modifies the SQL query as:
 ```sql
 SELECT * FROM users WHERE username = 'admin' -- ' AND password = 'anything'
 ```
-The `--` comments out the rest of the query, allowing the attacker to log in **without a valid password**.
+- The `--` comments out the rest of the query, allowing the attacker to log in **without a valid password**.
 
----
+#### **3. Consequences of SQL Injection**
 
-## **3. Consequences of SQL Injection**
 ✅ **Bypassing Authentication** – Attackers can gain unauthorized access.  
 ✅ **Data Theft** – Sensitive information (emails, passwords, credit card details) can be exposed.  
 ✅ **Data Manipulation** – Hackers can modify, delete, or insert data.  
 ✅ **Database Corruption** – Attackers can delete entire tables (`DROP TABLE users`).  
 ✅ **System Takeover** – In extreme cases, attackers can execute system commands, gaining full control of the server.
 
----
+#### **4. Preventing SQL Injection**
 
-## **4. Preventing SQL Injection**
-### **🔹 (A) Use Prepared Statements (Parameterized Queries)**
-Prepared statements **separate SQL logic from user input**, preventing malicious injection.
+- **(A) Use Prepared Statements (Parameterized Queries)**  
+    - Prepared statements **separate SQL logic from user input**, preventing malicious injection.  
+    - **✅ Secure PHP Code (Using `mysqli` Prepared Statements)**
+    ```php
+    <?php
+    $conn = new mysqli("localhost", "root", "", "test_db");
 
-#### **✅ Secure PHP Code (Using `mysqli` Prepared Statements)**
-```php
-<?php
-$conn = new mysqli("localhost", "root", "", "test_db");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+    $stmt->bind_param("ss", $username, $password);
 
-$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-$stmt->bind_param("ss", $username, $password);
+    $username = $_GET['username'];
+    $password = $_GET['password'];
 
-$username = $_GET['username'];
-$password = $_GET['password'];
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$stmt->execute();
-$result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        echo "Login successful!";
+    } else {
+        echo "Invalid credentials!";
+    }
+    ?>
+    ```
 
-if ($result->num_rows > 0) {
-    echo "Login successful!";
-} else {
-    echo "Invalid credentials!";
-}
-?>
-```
+    - **✅ Secure PHP Code (Using `PDO` Prepared Statements)**
+    ```php
+    <?php
+    $pdo = new PDO("mysql:host=localhost;dbname=test_db", "root", "");
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-#### **✅ Secure PHP Code (Using `PDO` Prepared Statements)**
-```php
-<?php
-$pdo = new PDO("mysql:host=localhost;dbname=test_db", "root", "");
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
+    $stmt->execute([
+        'username' => $_GET['username'],
+        'password' => $_GET['password']
+    ]);
 
-$stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
-$stmt->execute([
-    'username' => $_GET['username'],
-    'password' => $_GET['password']
-]);
+    if ($stmt->rowCount() > 0) {
+        echo "Login successful!";
+    } else {
+        echo "Invalid credentials!";
+    }
+    ?>
+    ```
 
-if ($stmt->rowCount() > 0) {
-    echo "Login successful!";
-} else {
-    echo "Invalid credentials!";
-}
-?>
-```
----
+- **(B) Use Input Validation and Sanitization**
+    - Ensure input fields contain only **expected values** (e.g., letters and numbers).
+    - Remove special characters using `filter_var()`.
+    ```php
+    $username = filter_var($_GET['username'], FILTER_SANITIZE_STRING);
+    ```
 
-### **🔹 (B) Use Input Validation and Sanitization**
-- Ensure input fields contain only **expected values** (e.g., letters and numbers).
-- Remove special characters using `filter_var()`.
-```php
-$username = filter_var($_GET['username'], FILTER_SANITIZE_STRING);
-```
+- **(C) Use Least Privilege Database Accounts**
 
----
+    - Create **database users with minimal privileges** to reduce the impact of an attack.
+    - Avoid using **root** access in your database connections.
 
-### **🔹 (C) Use Least Privilege Database Accounts**
-- Create **database users with minimal privileges** to reduce the impact of an attack.
-- Avoid using **root** access in your database connections.
+- **🔹 (D) Disable Display of SQL Errors**
+    - Attackers can exploit detailed error messages. Hide SQL errors in production:
+    ```php
+    ini_set('display_errors', 0);
+    error_reporting(0);
+    ```
 
----
+- **SQL Injection is one of the most dangerous security threats** that can lead to **data theft, unauthorized access, and database destruction**.  
 
-### **🔹 (D) Disable Display of SQL Errors**
-Attackers can exploit detailed error messages. Hide SQL errors in production:
-```php
-ini_set('display_errors', 0);
-error_reporting(0);
-```
-
----
-
-## **5. Conclusion**
-🚨 **SQL Injection is one of the most dangerous security threats** that can lead to **data theft, unauthorized access, and database destruction**.  
-
-✅ **Prevention Strategies:**  
+**Prevention Strategies:**  
 - Always **use prepared statements** (`mysqli` or `PDO`).  
 - **Validate and sanitize** user input.  
 - **Use least privilege** database accounts.  
@@ -2330,6 +2521,8 @@ error_reporting(0);
 ## Session and Cookies
 
 ### THEORY EXERCISE: Explain the differences between sessions and cookies in PHP.
+
+
 
 ### Practical Exercise: Write a script to create a session and store user data, and then retrieve it on a different page. Also, demonstrate how to set and retrieve a cookie.  
 

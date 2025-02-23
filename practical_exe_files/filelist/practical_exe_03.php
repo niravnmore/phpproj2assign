@@ -13,7 +13,6 @@
         private $make;
         private $model;
         private $year;
-
         public function __construct($make, $model, $year)
         {
             $this->make = $make;
@@ -28,23 +27,14 @@
     }
 
     // Example usage
-
     $car1 = new Car("Toyota", "Corolla", 2018);
-
     $car1->displayDetails();
-
     $car2 = new Car("Honda", "Civic", 2019);
-
     $car2->displayDetails();
-
     $car3 = new Car("Suzuki", "Swift", 2020);
-
     $car3->displayDetails();
-
     $car4 = new Car("Hyundai", "Accent", 2021);
-
     $car4->displayDetails();
-
     ?>
 
 </div>
