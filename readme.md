@@ -3213,7 +3213,7 @@ try {
         Password: <input type="password" name="password" required><br>
         <input type="submit" name="submit" value="Register">
     </form>
-
+    <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -3233,6 +3233,7 @@ try {
             echo "Registration successful!";
         }
     }
+    ?>
 </body>
 </html>
 
@@ -3256,7 +3257,7 @@ try {
         Password: <input type="password" name="password" required><br>
         <input type="submit" name="submit" value="Register">
     </form>
-
+    <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -3288,6 +3289,7 @@ try {
             }
         }
     }
+    ?>
 </body>
 </html>
 ```
@@ -3342,7 +3344,7 @@ echo $_COOKIE['user']; // Retrieve cookie data
 ### Practical Exercise: Write a script to create a session and store user data, and then retrieve it on a different page. Also, demonstrate how to set and retrieve a cookie.  
 
 ```php
-
+<?php
 session_start();
 
 // Set session and cookie
@@ -3362,6 +3364,7 @@ if (isset($_COOKIE['user'])) {
 } else {
     echo "No cookie found.<br>";
 }
+?>
 
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>">Refresh Page</a>
 
@@ -3371,188 +3374,2159 @@ if (isset($_COOKIE['user'])) {
 
 ## File Upload
 
-### THEORY EXERCISE: Discuss file upload functionality in PHP and its security implications. 
+### THEORY EXERCISE: Discuss file upload functionality in PHP and its security implications.  
+
+#### **File Upload Functionality in PHP**
+
+Uploading files in PHP involves handling form submissions and moving files to a designated directory. However, improper handling can lead to security vulnerabilities.
+
+#### **Basic File Upload Process**
+1. Create an HTML form with `enctype="multipart/form-data"`:
+   ```html
+   <form action="upload.php" method="post" enctype="multipart/form-data">
+       <input type="file" name="file">
+       <input type="submit" value="Upload">
+   </form>
+   ```
+
+2. Handle the file upload in `upload.php`:
+   ```php
+   <?php
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+       $target_dir = "uploads/";
+       $target_file = $target_dir . basename($_FILES["file"]["name"]);
+       
+       if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+           echo "File uploaded successfully.";
+       } else {
+           echo "File upload failed.";
+       }
+   }
+   ?>
+   ```
+
+---
+
+#### **Security Implications & Best Practices**
+
+#### **1. Restrict File Types**
+Attackers can upload executable scripts (e.g., `.php`, `.exe`), leading to Remote Code Execution (RCE).
+- Use `mime_content_type()` or `finfo_file()` to validate file types:
+  ```php
+  $allowed_types = ['image/jpeg', 'image/png', 'application/pdf'];
+  $file_type = mime_content_type($_FILES["file"]["tmp_name"]);
+
+  if (!in_array($file_type, $allowed_types)) {
+      die("Invalid file type.");
+  }
+  ```
+
+#### **2. Limit File Size**
+Large files can lead to **Denial of Service (DoS)** attacks.
+- Set limits in `php.ini`:
+  ```ini
+  upload_max_filesize = 2M
+  post_max_size = 2M
+  ```
+
+- Check size in PHP:
+  ```php
+  if ($_FILES["file"]["size"] > 2097152) { // 2MB limit
+      die("File is too large.");
+  }
+  ```
+
+#### **3. Store Files Securely**
+Never store uploaded files in a publicly accessible directory.
+- Store outside the document root (`/var/www/uploads` instead of `/var/www/html/uploads`).
+- Use random names for uploaded files:
+  ```php
+  $new_filename = uniqid() . "_" . basename($_FILES["file"]["name"]);
+  ```
+
+#### **4. Prevent Execution of Uploaded Files**
+Even if an attacker uploads a PHP script, prevent execution by:
+- Storing files outside `public_html`.
+- Disabling execution in `.htaccess`:
+  ```
+  <FilesMatch "\.(php|pl|py|jsp|asp|exe|sh)$">
+      Order Allow,Deny
+      Deny from all
+  </FilesMatch>
+  ```
+
+#### **5. Validate File Extensions**
+Attackers can rename `.php` files to `.jpg` and still execute them.
+- Use `pathinfo()` to check extensions:
+  ```php
+  $allowed_extensions = ['jpg', 'png', 'pdf'];
+  $file_ext = strtolower(pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION));
+
+  if (!in_array($file_ext, $allowed_extensions)) {
+      die("Invalid file extension.");
+  }
+  ```
+
+#### **6. Rename and Move Files Securely**
+Instead of keeping the original filename:
+  ```php
+  $safe_name = uniqid() . "." . $file_ext;
+  move_uploaded_file($_FILES["file"]["tmp_name"], "uploads/" . $safe_name);
+  ```
+
+---
 
 ### Practical Exercise: Create a file upload form that allows users to upload files and handle the uploaded files safely on the server.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_27.php">Practical Exercise 27</a>
+```php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload</title>
+</head>
+<body>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        Select file to upload:
+        <input type="file" name="fileToUpload" required>
+        <input type="submit" value="Upload File" name="submit">
+    </form>
+</body>
+</html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    
+    // Check if file already exists
+    if (file_exists($target_file)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    $allowed_types = ["jpg", "png", "jpeg", "gif", "pdf", "txt"];
+    if (!in_array($fileType, $allowed_types)) {
+        echo "Sorry, only JPG, JPEG, PNG, GIF, PDF, and TXT files are allowed.";
+        $uploadOk = 0;
+    }
+
+    // Check file size (limit: 2MB)
+    if ($_FILES["fileToUpload"]["size"] > 2000000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+
+    // If all checks pass, move the uploaded file
+    if ($uploadOk == 1) {
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            echo "The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.";
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
+?>
+```
+
+---
 
 ## PHP with MVC Architecture
 
 ### Practical Exercise: Implement a CRUD application (Create, Read, Update, Delete) using the MVC architecture to manage user data.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_28.php">Practical Exercise 28</a>
+```php
+<?php
+// models/User.php
+class User {
+    private $conn;
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+    public function getAllUsers() {
+        $stmt = $this->conn->prepare("SELECT * FROM users");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getUser($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function createUser($name, $email) {
+        $stmt = $this->conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+        return $stmt->execute([$name, $email]);
+    }
+    public function updateUser($id, $name, $email) {
+        $stmt = $this->conn->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+        return $stmt->execute([$name, $email, $id]);
+    }
+    public function deleteUser($id) {
+        $stmt = $this->conn->prepare("DELETE FROM users WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+}
+
+// controllers/UserController.php
+require_once "models/User.php";
+require_once "config/database.php";
+class UserController {
+    private $user;
+    public function __construct($db) {
+        $this->user = new User($db);
+    }
+    public function index() {
+        $users = $this->user->getAllUsers();
+        include "views/user_list.php";
+    }
+    public function create() {
+        if ($_POST) {
+            $this->user->createUser($_POST['name'], $_POST['email']);
+            header("Location: index.php");
+        }
+        include "views/user_form.php";
+    }
+    public function update($id) {
+        $user = $this->user->getUser($id);
+        if ($_POST) {
+            $this->user->updateUser($id, $_POST['name'], $_POST['email']);
+            header("Location: index.php");
+        }
+        include "views/user_form.php";
+    }
+    public function delete($id) {
+        $this->user->deleteUser($id);
+        header("Location: index.php");
+    }
+}
+
+// index.php (Front Controller)
+require_once "controllers/UserController.php";
+$db = new PDO("mysql:host=localhost;dbname=test_db", "root", "");
+$userController = new UserController($db);
+$action = $_GET['action'] ?? 'index';
+$id = $_GET['id'] ?? null;
+if (method_exists($userController, $action)) {
+    $userController->$action($id);
+} else {
+    echo "Invalid action.";
+}
+
+// views/user_list.php
+foreach ($users as $user) {
+    echo "<p>{$user['name']} ({$user['email']}) 
+    <a href='index.php?action=update&id={$user['id']}'>Edit</a> | 
+    <a href='index.php?action=delete&id={$user['id']}'>Delete</a></p>";
+}
+echo "<a href='index.php?action=create'>Add New User</a>";
+
+// views/user_form.php
+?>
+<form method="POST">
+    <input type="text" name="name" value="<?= $user['name'] ?? '' ?>" placeholder="Name" required>
+    <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" placeholder="Email" required>
+    <input type="submit" value="Save">
+</form>
+```
+
+---
 
 ## Insert, Update, Delete MVC
 
 ### Practical Exercise: Extend the CRUD application to include functionalities for inserting, updating, and deleting user records, ensuring proper separation of concerns in the MVC structure.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_29.php">Practical Exercise 29</a>
+```php
+<?php
+// models/User.php
+class User {
+    private $conn;
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+    public function getAllUsers() {
+        $stmt = $this->conn->prepare("SELECT * FROM users");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getUser($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function createUser($name, $email) {
+        $stmt = $this->conn->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
+        return $stmt->execute([$name, $email]);
+    }
+    public function updateUser($id, $name, $email) {
+        $stmt = $this->conn->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+        return $stmt->execute([$name, $email, $id]);
+    }
+    public function deleteUser($id) {
+        $stmt = $this->conn->prepare("DELETE FROM users WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+}
+
+// controllers/UserController.php
+require_once "models/User.php";
+require_once "config/database.php";
+class UserController {
+    private $user;
+    public function __construct($db) {
+        $this->user = new User($db);
+    }
+    public function index() {
+        $users = $this->user->getAllUsers();
+        include "views/user_list.php";
+    }
+    public function create() {
+        if ($_POST) {
+            $this->user->createUser($_POST['name'], $_POST['email']);
+            header("Location: index.php");
+            exit();
+        }
+        include "views/user_form.php";
+    }
+    public function update($id) {
+        $user = $this->user->getUser($id);
+        if ($_POST) {
+            $this->user->updateUser($id, $_POST['name'], $_POST['email']);
+            header("Location: index.php");
+            exit();
+        }
+        include "views/user_form.php";
+    }
+    public function delete($id) {
+        $this->user->deleteUser($id);
+        header("Location: index.php");
+        exit();
+    }
+}
+
+// index.php (Front Controller)
+require_once "controllers/UserController.php";
+$db = new PDO("mysql:host=localhost;dbname=test_db", "root", "");
+$userController = new UserController($db);
+$action = $_GET['action'] ?? 'index';
+$id = $_GET['id'] ?? null;
+if (method_exists($userController, $action)) {
+    $userController->$action($id);
+} else {
+    echo "Invalid action.";
+}
+
+// views/user_list.php
+?>
+<h2>User List</h2>
+<a href='index.php?action=create'>Add New User</a>
+<?php foreach ($users as $user): ?>
+    <p>
+        <?= htmlspecialchars($user['name']) ?> (<?= htmlspecialchars($user['email']) ?>)
+        <a href='index.php?action=update&id=<?= $user['id'] ?>'>Edit</a> |
+        <a href='index.php?action=delete&id=<?= $user['id'] ?>' onclick='return confirm("Are you sure?")'>Delete</a>
+    </p>
+<?php endforeach; 
+
+// views/user_form.php
+?>
+<h2><?= isset($user) ? "Edit User" : "Add New User" ?></h2>
+<form method="POST">
+    <input type="text" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Name" required>
+    <input type="email" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>" placeholder="Email" required>
+    <input type="submit" value="Save">
+</form>
+<a href='index.php'>Back to List</a>
+```
+
+---
 
 ## Extra Practise for Grade A
 
 ### 1. Practical Exercise: Develop a class hierarchy for a simple e-commerce system with classes like `Product`, `Category`, and `Order`. Implement encapsulation by using private properties and public methods to access them.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_30.php">Practical Exercise 30</a>
+```php
+<?php
+// Product class
+class Product {
+    private $id;
+    private $name;
+    private $price;
+    private $category;
+
+    public function __construct($id, $name, $price, Category $category) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->price = $price;
+        $this->category = $category;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function getCategory() {
+        return $this->category;
+    }
+
+    public function setPrice($price) {
+        if ($price > 0) {
+            $this->price = $price;
+        }
+    }
+}
+
+// Category class
+class Category {
+    private $id;
+    private $name;
+
+    public function __construct($id, $name) {
+        $this->id = $id;
+        $this->name = $name;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+}
+
+// Order class
+class Order {
+    private $id;
+    private $products = [];
+    private $totalAmount = 0;
+
+    public function __construct($id) {
+        $this->id = $id;
+    }
+
+    public function addProduct(Product $product) {
+        $this->products[] = $product;
+        $this->totalAmount += $product->getPrice();
+    }
+
+    public function getTotalAmount() {
+        return $this->totalAmount;
+    }
+
+    public function getProducts() {
+        return $this->products;
+    }
+}
+
+// Example usage
+$category = new Category(1, "Electronics");
+$product1 = new Product(101, "Smartphone", 500, $category);
+$product2 = new Product(102, "Laptop", 1200, $category);
+
+$order = new Order(1);
+$order->addProduct($product1);
+$order->addProduct($product2);
+
+echo "Total Order Amount: $" . $order->getTotalAmount();
+
+?>
+```
+
+---
 
 ## Class
 
 ### 2. Practical Exercise: Create a class called `Book` with properties like `title`, `author`, and `price`. Implement a method to apply a discount to the book's price and return the new price.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_31.php">Practical Exercise 31</a>
+```php
+<?php
+class Book {
+    private $title;
+    private $author;
+    private $price;
+
+    public function __construct($title, $author, $price) {
+        $this->title = $title;
+        $this->author = $author;
+        $this->price = $price;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getAuthor() {
+        return $this->author;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function applyDiscount($percentage) {
+        if ($percentage > 0 && $percentage <= 100) {
+            $discountAmount = ($this->price * $percentage) / 100;
+            $this->price -= $discountAmount;
+        }
+        return $this->price;
+    }
+}
+
+// Example usage
+$book = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
+echo "Original Price: $" . $book->getPrice() . "\n";
+$newPrice = $book->applyDiscount(10);
+echo "Discounted Price: $" . $newPrice . "\n";
+?>
+```
+
+---
 
 ## Object
 
 ### 3. Practical Exercise: Instantiate an object of the `Book` class and demonstrate the usage of its methods. Create multiple instances of `Book` and display their details in a formatted manner.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_32.php">Practical Exercise 32</a>
+```php
+<?php
+class Book {
+    private $title;
+    private $author;
+    private $price;
+
+    public function __construct($title, $author, $price) {
+        $this->title = $title;
+        $this->author = $author;
+        $this->price = $price;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getAuthor() {
+        return $this->author;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function applyDiscount($percentage) {
+        if ($percentage > 0 && $percentage <= 100) {
+            $discountAmount = ($this->price * $percentage) / 100;
+            $this->price -= $discountAmount;
+        }
+        return $this->price;
+    }
+}
+
+// Instantiate multiple books
+$book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", 20);
+$book2 = new Book("1984", "George Orwell", 15);
+$book3 = new Book("To Kill a Mockingbird", "Harper Lee", 18);
+
+// Apply discounts
+$book1->applyDiscount(10);
+$book2->applyDiscount(15);
+$book3->applyDiscount(5);
+
+// Display book details
+$books = [$book1, $book2, $book3];
+
+foreach ($books as $book) {
+    echo "Title: " . $book->getTitle() . "\n";
+    echo "Author: " . $book->getAuthor() . "\n";
+    echo "Price after discount: $" . $book->getPrice() . "\n";
+    echo "-----------------------------\n";
+}
+?>
+```
+
+---
 
 ## Extends
 
 ### 4. Practical Exercise: Create a base class called `Employee` with properties like `name` and `salary`. Extend it with subclasses `FullTimeEmployee` and `PartTimeEmployee`, each having specific methods to calculate bonuses.  
 
-- <a href="./practical_exe_files/pe33.php">Practical Exercise 33</a>
+```php
+<?php
+// Base class: Employee
+class Employee {
+    protected $name;
+    protected $salary;
+
+    public function __construct($name, $salary) {
+        $this->name = $name;
+        $this->salary = $salary;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getSalary() {
+        return $this->salary;
+    }
+}
+
+// Subclass: FullTimeEmployee
+class FullTimeEmployee extends Employee {
+    public function calculateBonus() {
+        return $this->salary * 0.10; // 10% bonus
+    }
+}
+
+// Subclass: PartTimeEmployee
+class PartTimeEmployee extends Employee {
+    public function calculateBonus() {
+        return $this->salary * 0.05; // 5% bonus
+    }
+}
+
+// Example usage
+$fullTimeEmp = new FullTimeEmployee("Alice", 5000);
+$partTimeEmp = new PartTimeEmployee("Bob", 2000);
+
+echo "Employee: " . $fullTimeEmp->getName() . " - Salary: $" .
+ $fullTimeEmp->getSalary() . " - Bonus: $" . $fullTimeEmp->calculateBonus() . "\n";
+echo "Employee: " . $partTimeEmp->getName() . " - Salary: $" .
+ $partTimeEmp->getSalary() . " - Bonus: $" . $partTimeEmp->calculateBonus() . "\n";
+?>
+```
+
+---
 
 ## Overloading
 
 ### 5. Practical Exercise: Create a `Calculator` class with a method `calculate` that can add, subtract, or multiply based on the number and type of arguments passed. 
 
-- <a href="./practical_exe_files/pe34.php">Practical Exercise 34</a>
+```php
+<?php
+
+class Calculator {
+    public function calculate(...$args) {
+        $operation = array_shift($args);
+        
+        if (empty($args)) {
+            throw new InvalidArgumentException("No numbers provided for calculation.");
+        }
+        
+        switch ($operation) {
+            case 'add':
+                return array_sum($args);
+            case 'subtract':
+                return array_shift($args) - array_sum($args);
+            case 'multiply':
+                return array_product($args);
+            default:
+                throw new InvalidArgumentException("Invalid operation. Use 'add', 'subtract', or 'multiply'.");
+        }
+    }
+}
+
+// Example usage
+$calc = new Calculator();
+
+echo "Addition: " . $calc->calculate('add', 5, 10, 15) . "\n";
+echo "Subtraction: " . $calc->calculate('subtract', 50, 20, 10) . "\n";
+echo "Multiplication: " . $calc->calculate('multiply', 2, 3, 4) . "\n";
+?>
+```
+
+---
 
 ## Abstraction Interface
 
 ### 6. Practical Exercise: Define an interface `PaymentInterface` with methods like `processPayment()`, `refund()`, and implement it in classes like `CreditCardPayment` and `PaypalPayment`.  
 
-- <a href="./practical_exe_files/pe35.php">Practical Exercise 35</a>
+```php
+<?php
+
+// Define the PaymentInterface
+interface PaymentInterface {
+    public function processPayment($amount);
+    public function refund($amount);
+}
+
+// Implement CreditCardPayment class
+class CreditCardPayment implements PaymentInterface {
+    public function processPayment($amount) {
+        return "Processing credit card payment of $$amount";
+    }
+
+    public function refund($amount) {
+        return "Refunding $$amount to credit card";
+    }
+}
+
+// Implement PaypalPayment class
+class PaypalPayment implements PaymentInterface {
+    public function processPayment($amount) {
+        return "Processing PayPal payment of $$amount";
+    }
+
+    public function refund($amount) {
+        return "Refunding $$amount via PayPal";
+    }
+}
+
+// Example usage
+$creditCardPayment = new CreditCardPayment();
+echo $creditCardPayment->processPayment(100) . "\n";
+echo $creditCardPayment->refund(50) . "\n";
+
+$paypalPayment = new PaypalPayment();
+echo $paypalPayment->processPayment(200) . "\n";
+echo $paypalPayment->refund(75) . "\n";
+?>
+```
+
+---
 
 ## Constructor
 
 ### 7. Practical Exercise: Create a class `Student` with properties like `name`, `age`, and `grade`. Use a constructor to initialize these properties and a method to display student details.  
 
-- <a href="./practical_exe_files/pe36.php">Practical Exercise 36</a>
+```php
+<?php
+
+class Student {
+    private $name;
+    private $age;
+    private $grade;
+
+    // Constructor to initialize properties
+    public function __construct($name, $age, $grade) {
+        $this->name = $name;
+        $this->age = $age;
+        $this->grade = $grade;
+    }
+
+    // Method to display student details
+    public function displayDetails() {
+        echo "Student Name: " . $this->name . "\n";
+        echo "Age: " . $this->age . "\n";
+        echo "Grade: " . $this->grade . "\n";
+    }
+}
+
+// Example usage
+$student1 = new Student("Alice", 20, "A");
+$student1->displayDetails();
+
+?>
+
+```
+
+---
 
 ## Destructor
 
 ### 8. Practical Exercise: Write a class that connects to a database, with a destructor that closes the connection when the object is destroyed.  
 
-- <a href="./practical_exe_files/pe37.php">Practical Exercise 37</a>
+```php
+<?php
+
+class DatabaseConnection {
+    private $host = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "test_db";
+    private $conn;
+
+    // Constructor to establish database connection
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->dbname}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo "Connected successfully\n";
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage() . "\n";
+        }
+    }
+
+    // Destructor to close the connection
+    public function __destruct() {
+        $this->conn = null;
+        echo "Connection closed\n";
+    }
+}
+
+// Example usage
+$db = new DatabaseConnection();
+
+?>
+
+```
+
+---
 
 ## Magic Methods
 
 ### 9. Practical Exercise: Create a class that uses the `__set()` and `__get()` magic methods to dynamically create and access properties based on user input.  
 
-- <a href="./practical_exe_files/pe38.php">Practical Exercise 38</a>
+```php
+<?php
+
+class DynamicProperties {
+    private $properties = [];
+
+    // Magic method to set properties dynamically
+    public function __set($name, $value) {
+        $this->properties[$name] = $value;
+    }
+
+    // Magic method to get properties dynamically
+    public function __get($name) {
+        return $this->properties[$name] ?? "Property '$name' does not exist.";
+    }
+}
+
+// Example usage
+$obj = new DynamicProperties();
+$obj->name = "Alice";
+$obj->age = 25;
+
+echo "Name: " . $obj->name . "\n";
+echo "Age: " . $obj->age . "\n";
+echo "Grade: " . $obj->grade . "\n";
+
+?>
+
+```
+
+---
 
 ## Scope Resolution
 
 ### 10. Practical Exercise: Define a class with static properties and methods to keep track of the number of instances created. Use the scope resolution operator to access these static members.  
 
-- <a href="./practical_exe_files/pe39.php">Practical Exercise 39</a>
+```php
+<?php
+
+class InstanceTracker {
+    private static $instanceCount = 0;
+
+    public function __construct() {
+        self::$instanceCount++;
+    }
+
+    public static function getInstanceCount() {
+        return self::$instanceCount;
+    }
+}
+
+// Example usage
+$instance1 = new InstanceTracker();
+$instance2 = new InstanceTracker();
+$instance3 = new InstanceTracker();
+
+echo "Number of instances created: " . InstanceTracker::getInstanceCount() . "\n";
+
+?>
+
+```
+
+---
 
 ## Traits
 
 ### 11. Practical Exercise: Create two traits: `Logger` and `Notifier`. Use these traits in a class `User` to log user activities and send notifications.  
 
-- <a href="./practical_exe_files/pe40.php">Practical Exercise 40</a>
+```php
+<?php
+
+trait Logger {
+    public function log($message) {
+        echo "[LOG]: " . $message . "\n";
+    }
+}
+
+trait Notifier {
+    public function notify($message) {
+        echo "[NOTIFICATION]: " . $message . "\n";
+    }
+}
+
+class User {
+    use Logger, Notifier;
+    private $name;
+
+    public function __construct($name) {
+        $this->name = $name;
+        $this->log("User '$name' created.");
+    }
+
+    public function performAction($action) {
+        $this->log("User '$this->name' performed action: $action");
+        $this->notify("Hey $this->name, you have a new notification about: $action");
+    }
+}
+
+// Example usage
+$user = new User("Alice");
+$user->performAction("Logged in");
+
+?>
+
+```
+
+---
 
 ## Visibility
 
 ### 12. Practical Exercise: Develop a class `Account` with properties for `username` (public), `password`(private), and `accountBalance` (protected). Demonstrate how to access these properties in a derived class.  
 
-- <a href="./practical_exe_files/pe41.php">Practical Exercise 41</a>
+```php
+<?php
+
+class Account {
+    public $username;
+    private $password;
+    protected $accountBalance;
+
+    public function __construct($username, $password, $accountBalance) {
+        $this->username = $username;
+        $this->password = $password;
+        $this->accountBalance = $accountBalance;
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    protected function getBalance() {
+        return $this->accountBalance;
+    }
+}
+
+class SavingsAccount extends Account {
+    public function displayBalance() {
+        return "User: {$this->username}, Balance: {$this->getBalance()}";
+    }
+}
+
+// Example usage
+$account = new SavingsAccount("JohnDoe", "securePass123", 5000);
+echo $account->getUsername() . "\n";
+echo $account->displayBalance() . "\n";
+
+?>
+
+```
+
+---
 
 ## Type Hinting
 
 ### 13. Practical Exercise: Write a method in a class `Order` that accepts an array of products (type-hinted)and calculates the total order amount.  
 
-- <a href="./practical_exe_files/pe42.php">Practical Exercise 42</a>
+```php
+<?php
+
+class Product {
+    public $name;
+    public $price;
+
+    public function __construct($name, $price) {
+        $this->name = $name;
+        $this->price = $price;
+    }
+}
+
+class Order {
+    public function calculateTotal(array $products): float {
+        $total = 0;
+        foreach ($products as $product) {
+            $total += $product->price;
+        }
+        return $total;
+    }
+}
+
+// Example usage
+$product1 = new Product("Laptop", 1200.50);
+$product2 = new Product("Mouse", 25.75);
+$product3 = new Product("Keyboard", 45.30);
+
+$order = new Order();
+echo "Total Order Amount: " . $order->calculateTotal([$product1, $product2, $product3]) . "\n";
+
+?>
+
+```
+
+---
 
 ## Final Keyword
 
 ### 14. Practical Exercise: Create a base class `Animal` and a final class `Dog`. Attempt to extend `Dog` and demonstrate the restriction imposed by the `final` keyword.  
 
-- <a href="./practical_exe_files/pe43.php">Practical Exercise 43</a>
+```php
+<?php
+
+class Animal {
+    public function makeSound() {
+        return "Some generic animal sound";
+    }
+}
+
+final class Dog extends Animal {
+    public function makeSound() {
+        return "Bark";
+    }
+}
+
+// Attempting to extend the final class will result in an error
+/*
+class Puppy extends Dog {
+    // This will cause a fatal error
+}
+*/
+
+// Example usage
+$dog = new Dog();
+echo $dog->makeSound() . "\n";
+
+?>
+
+```
+
+---
 
 ## Email Security Function
 
 ### 15. Practical Exercise: Write a function that sanitizes user input for an email address, validates it, and throws an exception if it fails validation.  
 
-- <a href="./practical_exe_files/pe44.php">Practical Exercise 44</a>
+```php
+<?php
+
+// Function to sanitize and validate email
+function validateEmail(string $email): string {
+    $sanitizedEmail = filter_var($email, FILTER_SANITIZE_EMAIL);
+    if (!filter_var($sanitizedEmail, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("Invalid email address.");
+    }
+    return $sanitizedEmail;
+}
+
+// Example usage
+try {
+    $email = "test@example.com";
+    echo "Valid Email: " . validateEmail($email) . "\n";
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
+}
+
+?>
+```
+
+---
 
 ## File Handling
 
 ### 16. Practical Exercise: Create a script that uploads a file and reads its content. Implement error handling to manage any file-related exceptions.  
 
-- <a href="./practical_exe_files/pe45.php">Practical Exercise 45</a>
+```php
+<?php
+// File upload and read script
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
+    try {
+        if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception("File upload error.");
+        }
+
+        $filePath = __DIR__ . '/uploads/' . basename($_FILES['file']['name']);
+        if (!move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
+            throw new Exception("Failed to move uploaded file.");
+        }
+
+        echo "File uploaded successfully: " . $filePath . "\n";
+
+        // Read file content
+        $content = file_get_contents($filePath);
+        if ($content === false) {
+            throw new Exception("Failed to read file content.");
+        }
+        echo "File Content:\n" . htmlspecialchars($content) . "\n";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage() . "\n";
+    }
+}
+
+?>
+
+<form action="" method="post" enctype="multipart/form-data">
+    Select file to upload:
+    <input type="file" name="file">
+    <input type="submit" value="Upload File">
+</form>
+
+```
+
+---
 
 ## Handling Emails
 
 ### 17. Practical Exercise: Develop a function to send a welcome email to a user upon registration, ensuring the email format is validated first.  
 
-- <a href="./practical_exe_files/pe46.php">Practical Exercise 46</a>
+```php
+// Function to send welcome email
+function sendWelcomeEmail(string $email, string $name): void {
+    try {
+        $validatedEmail = validateEmail($email);
+        $subject = "Welcome to Our Platform, $name!";
+        $message = "Hello $name,\n\nThank you for registering with us. We are excited to have you on board!\n\nBest Regards,\nThe Team";
+        $headers = "From: no-reply@example.com\r\n" .
+                   "Reply-To: support@example.com\r\n" .
+                   "X-Mailer: PHP/" . phpversion();
+
+        if (!mail($validatedEmail, $subject, $message, $headers)) {
+            throw new Exception("Failed to send email.");
+        }
+        echo "Welcome email sent successfully to $validatedEmail.\n";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage() . "\n";
+    }
+}
+```
+
+---
 
 ## MVC Architecture
 
 ### 18. Practical Exercise: Extend the simple MVC application to include a model for managing user profiles, a view for displaying user details, and a controller for handling user actions.  
 
-- <a href="./practical_exe_files/pe47.php">Practical Exercise 47</a>
+```php
+<?php
+
+// Model: UserModel.php
+class UserModel {
+    private $users = [
+        1 => ["name" => "John Doe", "email" => "john@example.com", "age" => 25],
+        2 => ["name" => "Jane Smith", "email" => "jane@example.com", "age" => 28]
+    ];
+
+    public function getUserById($id) {
+        return $this->users[$id] ?? null;
+    }
+}
+
+// View: UserView.php
+class UserView {
+    public function renderUserProfile($user) {
+        if ($user) {
+            echo "<h2>User Profile</h2>";
+            echo "<p><strong>Name:</strong> {$user['name']}</p>";
+            echo "<p><strong>Email:</strong> {$user['email']}</p>";
+            echo "<p><strong>Age:</strong> {$user['age']}</p>";
+        } else {
+            echo "<p>User not found.</p>";
+        }
+    }
+}
+
+// Controller: UserController.php
+class UserController {
+    private $model;
+    private $view;
+
+    public function __construct() {
+        $this->model = new UserModel();
+        $this->view = new UserView();
+    }
+
+    public function showUserProfile($userId) {
+        $user = $this->model->getUserById($userId);
+        $this->view->renderUserProfile($user);
+    }
+}
+
+// Entry Point: index.php
+$userId = $_GET['id'] ?? 1; // Default to user ID 1
+$controller = new UserController();
+$controller->showUserProfile($userId);
+
+?>
+
+```
+
+---
 
 ## Practical Example: Implementation of all the OOPs Concepts
 
 ### 19. Practical Exercise: Develop a project that simulates a library system with classes for User, Book, and Transaction, applying all OOP principles.  
 
-- <a href="./practical_exe_files/pe48.php">Practical Exercise 48</a>
+```php
+<?php
+
+// Model: User.php
+class User {
+    private $name;
+    private $email;
+
+    public function __construct($name, $email) {
+        $this->name = $name;
+        $this->email = $email;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+}
+
+// Model: Book.php
+class Book {
+    private $title;
+    private $author;
+
+    public function __construct($title, $author) {
+        $this->title = $title;
+        $this->author = $author;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getAuthor() {
+        return $this->author;
+    }
+}
+
+// Model: Transaction.php
+class Transaction {
+    private $user;
+    private $book;
+    private $date;
+
+    public function __construct(User $user, Book $book) {
+        $this->user = $user;
+        $this->book = $book;
+        $this->date = date("Y-m-d H:i:s");
+    }
+
+    public function getTransactionDetails() {
+        return "{$this->user->getName()} borrowed '{$this->book->getTitle()}' by {$this->book->getAuthor()} on {$this->date}.";
+    }
+}
+
+// Example Usage
+$user = new User("John Doe", "john@example.com");
+$book = new Book("The Great Gatsby", "F. Scott Fitzgerald");
+$transaction = new Transaction($user, $book);
+
+echo $transaction->getTransactionDetails();
+
+?>
+
+```
+
+---
 
 ## Connection with MySQL Database
 
 ### 20. Practical Exercise: Write a class `Database` that handles database connections and queries. Use this class in another script to fetch user data from a `users` table.  
 
-- <a href="./practical_exe_files/pe49.php">Practical Exercise 49</a>
+```php
+<?php
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "library";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// Model: User.php
+class User {
+    private $name;
+    private $email;
+
+    public function __construct($name, $email) {
+        $this->name = $name;
+        $this->email = $email;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public static function getAllUsers(Database $db) {
+        $stmt = $db->query("SELECT name, email FROM users");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+// Model: Book.php
+class Book {
+    private $title;
+    private $author;
+
+    public function __construct($title, $author) {
+        $this->title = $title;
+        $this->author = $author;
+    }
+
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getAuthor() {
+        return $this->author;
+    }
+}
+
+// Model: Transaction.php
+class Transaction {
+    private $user;
+    private $book;
+    private $date;
+
+    public function __construct(User $user, Book $book) {
+        $this->user = $user;
+        $this->book = $book;
+        $this->date = date("Y-m-d H:i:s");
+    }
+
+    public function getTransactionDetails() {
+        return "{$this->user->getName()} borrowed '{$this->book->getTitle()}' by {$this->book->getAuthor()} on {$this->date}.";
+    }
+}
+
+// Example Usage
+$db = new Database();
+$users = User::getAllUsers($db);
+foreach ($users as $userData) {
+    echo "User: {$userData['name']}, Email: {$userData['email']}<br>";
+}
+
+?>
+
+```
+
+---
 
 ## SQL Injection
 
 ### 21. Practical Exercise: Create a vulnerable PHP script that demonstrates SQL injection. Then, rewrite it using prepared statements to prevent SQL injection attacks.  
 
-- <a href="./practical_exe_files/pe50.php">Practical Exercise 50</a>
+```php
+<?php
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "library";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO(
+                "mysql:host={$this->host};dbname={$this->db_name}", 
+                $this->username, 
+                $this->password
+            );
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+        return $stmt;
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// Vulnerable Script: SQL Injection
+if (isset($_GET['email'])) {
+    $db = new Database();
+    $email = $_GET['email'];
+    $sql = "SELECT * FROM users WHERE email = '$email'"; // Vulnerable to SQL Injection
+    $stmt = $db->query($sql);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        echo "User found: " . $user['name'];
+    } else {
+        echo "User not found.";
+    }
+}
+
+// Secure Script: Prevent SQL Injection with Prepared Statements
+if (isset($_GET['secure_email'])) {
+    $db = new Database();
+    $email = $_GET['secure_email'];
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $db->query($sql, [$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        echo "User found: " . $user['name'];
+    } else {
+        echo "User not found.";
+    }
+}
+?>
+```
+
+---
 
 ## Practical: Exception Handling with Try-Catch for Database Connection and Queries
 
 ### 22. Practical Exercise: Implement a complete registration process with a database connection that uses try-catch blocks to handle exceptions for all operations.
 
-- <a href="./practical_exe_files/pe51.php">Practical Exercise 51</a>
+```php
+<?php
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "library";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// Registration Process: Register.php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $db = new Database();
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    try {
+        $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+        $db->query($sql, [$name, $email, $password]);
+        echo "Registration successful!";
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <form method="post" action="">
+        <label>Name:</label>
+        <input type="text" name="name" required><br>
+        <label>Email:</label>
+        <input type="email" name="email" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
+
+```
+
+---
 
 ## Server-Side Validation while Registration using Regular Expressions
 
 ### 23. Practical Exercise: Write a PHP script that validates user inputs (username, password, email) using regular expressions, providing feedback on any validation errors.  
 
-- <a href="./practical_exe_files/pe52.php">Practical Exercise 52</a>
+```php
+<?php
+
+// Validate User Input
+function validateInput($name, $email, $password) {
+    $errors = [];
+
+    if (!preg_match("/^[a-zA-Z0-9_]{3,20}$/", $name)) {
+        $errors[] = "Username must be 3-20 characters long and contain only letters, numbers, and underscores.";
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email format.";
+    }
+    
+    if (!preg_match("/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/", $password)) {
+        $errors[] = "Password must be at least 6 characters long and include both letters and numbers.";
+    }
+    
+    return $errors;
+}
+?>
+
+```
+
+---
 
 ## Send Mail While Registration
 
 ### 24. Practical Exercise: Extend the registration process to send a confirmation email to the user after successful registration and validate the email format.  
 
-- <a href="./practical_exe_files/pe53.php">Practical Exercise 53</a>
+```php
+<?php
+
+// Send Confirmation Email
+function sendConfirmationEmail($email, $name) {
+    $subject = "Welcome to Our Platform!";
+    $message = "Hello $name,\n\nThank you for registering. Your account has been created successfully!\n\nBest regards,\nThe Team";
+    $headers = "From: noreply@yourdomain.com";
+    
+    if (!mail($email, $subject, $message, $headers)) {
+        throw new Exception("Failed to send confirmation email.");
+    }
+}
+
+// Registration Process: Register.php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $db = new Database();
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    $errors = validateInput($name, $email, $password);
+    if (empty($errors)) {
+        try {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
+            $db->query($sql, [$name, $email, $hashedPassword]);
+            
+            // Send Confirmation Email
+            sendConfirmationEmail($email, $name);
+            
+            echo "Registration successful! A confirmation email has been sent.";
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    } else {
+        foreach ($errors as $error) {
+            echo "<p style='color: red;'>$error</p>";
+        }
+    }
+}
+?>
+```
+
+---
 
 ## Session and Cookies
 
 ### 25. Practical Exercise: Implement a login system that uses sessions to keep track of user authentication and demonstrates cookie usage for "Remember Me" functionality. 
 
-- <a href="./practical_exe_files/pe54.php">Practical Exercise 54</a>
+```php
+<?php
+session_start();
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "library";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// User Authentication
+function authenticateUser($email, $password) {
+    $db = new Database();
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $db->query($sql, [$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user['name'];
+        return true;
+    }
+    return false;
+}
+
+// Remember Me functionality
+if (isset($_POST['remember_me'])) {
+    setcookie("user_email", $_POST['email'], time() + (86400 * 30), "/");
+}
+
+// Login Process: login.php
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    if (authenticateUser($email, $password)) {
+        echo "Login successful! Welcome, " . $_SESSION['user'] . "!";
+    } else {
+        echo "Invalid email or password.";
+    }
+}
+
+// Logout Process: logout.php
+if (isset($_GET['logout'])) {
+    session_destroy();
+    setcookie("user_email", "", time() - 3600, "/");
+    header("Location: login.php");
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <form method="post" action="">
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo isset($_COOKIE['user_email']) ? $_COOKIE['user_email'] : ''; ?>" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <label>
+            <input type="checkbox" name="remember_me"> Remember Me
+        </label><br>
+        <button type="submit" name="login">Login</button>
+    </form>
+    <a href="?logout=true">Logout</a>
+</body>
+</html>
+
+```
+
+---
 
 ## File Upload
 
 ### 26. Practical Exercise: Create a file upload feature that allows users to upload images. Ensure that the uploaded images are checked for file type and size for security.  
 
-- <a href="./practical_exe_files/pe55.php">Practical Exercise 55</a>
+```php
+<?php
+session_start();
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "library";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// User Authentication
+function authenticateUser($email, $password) {
+    $db = new Database();
+    $sql = "SELECT * FROM users WHERE email = ?";
+    $stmt = $db->query($sql, [$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user['name'];
+        return true;
+    }
+    return false;
+}
+
+// Remember Me functionality
+if (isset($_POST['remember_me'])) {
+    setcookie("user_email", $_POST['email'], time() + (86400 * 30), "/");
+}
+
+// Login Process: login.php
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    if (authenticateUser($email, $password)) {
+        echo "Login successful! Welcome, " . $_SESSION['user'] . "!";
+    } else {
+        echo "Invalid email or password.";
+    }
+}
+
+// Logout Process: logout.php
+if (isset($_GET['logout'])) {
+    session_destroy();
+    setcookie("user_email", "", time() - 3600, "/");
+    header("Location: login.php");
+}
+
+// File Upload Feature
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
+    $uploadDir = "uploads/";
+    $uploadFile = $uploadDir . basename($_FILES['image']['name']);
+    $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+    $allowedTypes = ["jpg", "jpeg", "png", "gif"];
+
+    if (!in_array($imageFileType, $allowedTypes)) {
+        echo "Only JPG, JPEG, PNG & GIF files are allowed.";
+    } elseif ($_FILES['image']['size'] > 2000000) {
+        echo "File is too large. Max 2MB allowed.";
+    } else {
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+            echo "File uploaded successfully.";
+        } else {
+            echo "File upload failed.";
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login & File Upload</title>
+</head>
+<body>
+    <form method="post" action="" enctype="multipart/form-data">
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo isset($_COOKIE['user_email']) ? $_COOKIE['user_email'] : ''; ?>" required><br>
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+        <label>
+            <input type="checkbox" name="remember_me"> Remember Me
+        </label><br>
+        <button type="submit" name="login">Login</button>
+    </form>
+    <a href="?logout=true">Logout</a>
+    
+    <h2>Upload an Image</h2>
+    <form method="post" action="" enctype="multipart/form-data">
+        <input type="file" name="image" required><br>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+```
+
+---
 
 ## PHP with MVC Architecture
 
 ### 27. Practical Exercise: Build a small blog application using the MVC architecture, where users can create, read, update, and delete posts.  
 
-- <a href="./practical_exe_files/pe56.php">Practical Exercise 56</a>
+```php
+<?php
+session_start();
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "blog";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// Blog Post Model
+class Post {
+    private $db;
+
+    public function __construct() {
+        $this->db = new Database();
+    }
+
+    public function createPost($title, $content) {
+        $sql = "INSERT INTO posts (title, content) VALUES (?, ?)";
+        return $this->db->query($sql, [$title, $content]);
+    }
+
+    public function getPosts() {
+        $sql = "SELECT * FROM posts ORDER BY created_at DESC";
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPost($id) {
+        $sql = "SELECT * FROM posts WHERE id = ?";
+        return $this->db->query($sql, [$id])->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePost($id, $title, $content) {
+        $sql = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+        return $this->db->query($sql, [$title, $content, $id]);
+    }
+
+    public function deletePost($id) {
+        $sql = "DELETE FROM posts WHERE id = ?";
+        return $this->db->query($sql, [$id]);
+    }
+}
+
+// Blog Controller
+class BlogController {
+    private $postModel;
+
+    public function __construct() {
+        $this->postModel = new Post();
+    }
+
+    public function createPost() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $this->postModel->createPost($title, $content);
+            header("Location: index.php");
+        }
+    }
+
+    public function deletePost() {
+        if (isset($_GET['delete'])) {
+            $id = $_GET['delete'];
+            $this->postModel->deletePost($id);
+            header("Location: index.php");
+        }
+    }
+}
+
+$controller = new BlogController();
+$controller->deletePost();
+
+$posts = (new Post())->getPosts();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Blog</title>
+</head>
+<body>
+    <h1>Simple Blog</h1>
+    <form method="post" action="">
+        <label>Title:</label>
+        <input type="text" name="title" required><br>
+        <label>Content:</label>
+        <textarea name="content" required></textarea><br>
+        <button type="submit" name="create">Create Post</button>
+    </form>
+    <hr>
+    <h2>Posts</h2>
+    <?php foreach ($posts as $post): ?>
+        <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+        <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
+        <a href="?delete=<?php echo $post['id']; ?>">Delete</a>
+        <hr>
+    <?php endforeach; ?>
+</body>
+</html>
+
+```
+
+---
 
 ## Insert, Update, Delete MVC
 
 ### 28. Practical Exercise: Expand the blog application to include a feature for user comments, allowing users to insert, update, and delete their comments. 
 
-- <a href="./practical_exe_files/pe57.php">Practical Exercise 57</a>
+```php
+<?php
+session_start();
+
+// Database Connection: Database.php
+class Database {
+    private $host = "localhost";
+    private $db_name = "blog";
+    private $username = "root";
+    private $password = "";
+    private $conn;
+
+    public function __construct() {
+        try {
+            $this->conn = new PDO("mysql:host={$this->host};dbname={$this->db_name}", $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+    }
+
+    public function query($sql, $params = []) {
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            die("Query failed: " . $e->getMessage());
+        }
+    }
+
+    public function __destruct() {
+        $this->conn = null;
+    }
+}
+
+// Blog Post Model
+class Post {
+    private $db;
+
+    public function __construct() {
+        $this->db = new Database();
+    }
+
+    public function createPost($title, $content) {
+        $sql = "INSERT INTO posts (title, content) VALUES (?, ?)";
+        return $this->db->query($sql, [$title, $content]);
+    }
+
+    public function getPosts() {
+        $sql = "SELECT * FROM posts ORDER BY created_at DESC";
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPost($id) {
+        $sql = "SELECT * FROM posts WHERE id = ?";
+        return $this->db->query($sql, [$id])->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePost($id, $title, $content) {
+        $sql = "UPDATE posts SET title = ?, content = ? WHERE id = ?";
+        return $this->db->query($sql, [$title, $content, $id]);
+    }
+
+    public function deletePost($id) {
+        $sql = "DELETE FROM posts WHERE id = ?";
+        return $this->db->query($sql, [$id]);
+    }
+}
+
+// Comment Model
+class Comment {
+    private $db;
+
+    public function __construct() {
+        $this->db = new Database();
+    }
+
+    public function addComment($postId, $comment) {
+        $sql = "INSERT INTO comments (post_id, comment) VALUES (?, ?)";
+        return $this->db->query($sql, [$postId, $comment]);
+    }
+
+    public function getComments($postId) {
+        $sql = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC";
+        return $this->db->query($sql, [$postId])->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteComment($id) {
+        $sql = "DELETE FROM comments WHERE id = ?";
+        return $this->db->query($sql, [$id]);
+    }
+}
+
+// Blog Controller
+class BlogController {
+    private $postModel;
+    private $commentModel;
+
+    public function __construct() {
+        $this->postModel = new Post();
+        $this->commentModel = new Comment();
+    }
+
+    public function createPost() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create'])) {
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $this->postModel->createPost($title, $content);
+            header("Location: index.php");
+        }
+    }
+
+    public function deletePost() {
+        if (isset($_GET['delete'])) {
+            $id = $_GET['delete'];
+            $this->postModel->deletePost($id);
+            header("Location: index.php");
+        }
+    }
+
+    public function addComment() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
+            $postId = $_POST['post_id'];
+            $comment = $_POST['comment'];
+            $this->commentModel->addComment($postId, $comment);
+            header("Location: index.php");
+        }
+    }
+}
+
+$controller = new BlogController();
+$controller->deletePost();
+$controller->addComment();
+
+$posts = (new Post())->getPosts();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Blog</title>
+</head>
+<body>
+    <h1>Simple Blog</h1>
+    <form method="post" action="">
+        <label>Title:</label>
+        <input type="text" name="title" required><br>
+        <label>Content:</label>
+        <textarea name="content" required></textarea><br>
+        <button type="submit" name="create">Create Post</button>
+    </form>
+    <hr>
+    <h2>Posts</h2>
+    <?php foreach ($posts as $post): ?>
+        <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+        <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
+        <a href="?delete=<?php echo $post['id']; ?>">Delete</a>
+        
+        <h4>Comments</h4>
+        <form method="post" action="">
+            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+            <textarea name="comment" required></textarea><br>
+            <button type="submit" name="add_comment">Add Comment</button>
+        </form>
+        <?php 
+        $comments = (new Comment())->getComments($post['id']);
+        foreach ($comments as $comment): ?>
+            <p><?php echo htmlspecialchars($comment['comment']); ?></p>
+            <a href="?delete_comment=<?php echo $comment['id']; ?>">Delete</a>
+        <?php endforeach; ?>
+        <hr>
+    <?php endforeach; ?>
+</body>
+</html>
+
+```
+
+---
