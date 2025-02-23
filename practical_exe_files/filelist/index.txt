@@ -1,0 +1,1 @@
+This is text from index.txt file.

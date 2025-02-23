@@ -26,7 +26,6 @@
        public function setPassword($pwd) {
            $this->password = password_hash($pwd, PASSWORD_BCRYPT);
        }
-
        public function getPassword() {
            return "Access Denied";
        }
@@ -49,7 +48,6 @@
              return "Some generic sound";
          }
      }
-
      class Dog extends Animal {
          public function makeSound() {
              return "Bark!";
@@ -110,6 +108,8 @@
      echo $car->start(); // Output: Car engine started!
      ```
 
+---
+
 ### Practical Exercise: Create a simple class in PHP that demonstrates encapsulation by using private and public properties and methods.
 
 ```php
@@ -154,10 +154,16 @@ class BankAccount
 // Example usage
 $account = new BankAccount("123456789", 1000);
 echo "<p> New Account created wih Initial Balance: " . $account->getBalance() . "</p>";
+    // New Account created wih Initial Balance: 1000
 $account->deposit(500);
+    // Deposited: 500. New Balance: 1500
 $account->withdraw(200);
+    // Withdrawn: 200. Remaining Balance: 1300
 echo "<p>Final Balance: " . $account->getBalance() . "</p>";
+    // Final Balance: 1300
 ```
+
+---
 
 ## Class
 
@@ -166,8 +172,6 @@ echo "<p>Final Balance: " . $account->getBalance() . "</p>";
 #### **Structure of a Class in PHP**  
 
 A **class** in PHP serves as a blueprint for creating objects. It defines **properties** (variables) and **methods** (functions) that describe an object's behavior.  
-
----
 
 #### **Basic Structure of a PHP Class**
 ```php
@@ -195,8 +199,6 @@ class ClassName {
 $object = new ClassName("Hello");
 echo $object->method1(); // Output: This is a public method.
 ```
-
----
 
 #### **Components of a PHP Class**
 
@@ -247,8 +249,6 @@ echo $object->method1(); // Output: This is a public method.
    echo $user->getName(); // Output: Nirav
    ```
 
----
-
 #### **Example: A Real-World Class (Car)**
 ```php
 class Car {
@@ -270,8 +270,6 @@ $myCar = new Car("Toyota", 120);
 echo $myCar->getCarInfo(); // Output: The Toyota is moving at 120 km/h.
 ```
 
----
-
 #### **Conclusion**
 - A class acts as a **blueprint** for objects.
 - **Properties** store object data, and **methods** define behaviors.
@@ -280,32 +278,36 @@ echo $myCar->getCarInfo(); // Output: The Toyota is moving at 120 km/h.
 
 This structured approach makes PHP code more **scalable, reusable, and maintainable**.  
 
+---
+
 ### Practical Exercise: Write a PHP script to create a class representing a "Car" with properties like make, model, and year, and a method to display the car details.  
 
 ```php
 class Car
+{
+    private $make;
+    private $model;
+    private $year;
+
+    public function __construct($make, $model, $year)
     {
-        private $make;
-        private $model;
-        private $year;
-
-        public function __construct($make, $model, $year)
-        {
-            $this->make = $make;
-            $this->model = $model;
-            $this->year = $year;
-        }
-
-        public function displayDetails()
-        {
-            echo "<p>Car Details: $this->year $this->make $this->model</p>";
-        }
+        $this->make = $make;
+        $this->model = $model;
+        $this->year = $year;
     }
 
-    // Example usage
-    $car1 = new Car("Toyota", "Corolla", 2018);
-    $car1->displayDetails();
+    public function displayDetails()
+    {
+        echo "<p>Car Details: $this->year $this->make $this->model</p>";
+    }
+}
+
+// Example usage
+$car1 = new Car("Toyota", "Corolla", 2018);
+$car1->displayDetails();    // Car Details: 2018 Toyota Corolla
 ```
+
+---
 
 ## Object
 
@@ -353,6 +355,8 @@ echo $car1->display(); // Output: Car: Toyota Camry
 3. **Accessing Properties and Methods** – Use `$object->property` to access attributes and `$object->method()` to call functions.  
 4. **Multiple Objects** – A class can create multiple independent objects with different data.  
 
+---
+
 ### Practical Exercise: Instantiate multiple objects of the "Car" class and demonstrate how to access their properties and methods.  
 
 ```php
@@ -376,14 +380,16 @@ class Car
 
     // Example usage
     $car1 = new Car("Toyota", "Corolla", 2018);
-    $car1->displayDetails();
+    $car1->displayDetails();    // Car Details: 2018 Toyota Corolla
     $car2 = new Car("Honda", "Civic", 2019);
-    $car2->displayDetails();
+    $car2->displayDetails();    // Car Details: 2019 Honda Civic
     $car3 = new Car("Suzuki", "Swift", 2020);
-    $car3->displayDetails();
+    $car3->displayDetails();    // Car Details: 2020 Suzuki Swift
     $car4 = new Car("Hyundai", "Accent", 2021);
-    $car4->displayDetails();
+    $car4->displayDetails();    // Car Details: 2021 Hyundai Accent
 ```
+
+---
 
 ## Extends
 
@@ -441,11 +447,9 @@ $dog->speak(); // Output: Buddy barks.
 ```php
 class Vehicle {
     protected $brand;
-
     public function __construct($brand) {
         $this->brand = $brand;
     }
-
     public function getBrand() {
         return $this->brand;
     }
@@ -453,12 +457,10 @@ class Vehicle {
 
 class Car extends Vehicle {
     private $model;
-
     public function __construct($brand, $model) {
         parent::__construct($brand); // Call parent constructor
         $this->model = $model;
     }
-
     public function getCarDetails() {
         return "Car: " . $this->getBrand() . " " . $this->model;
     }
@@ -466,7 +468,7 @@ class Car extends Vehicle {
 
 // Creating an object
 $car = new Car("Toyota", "Camry");
-echo $car->getCarDetails(); // Output: Car: Toyota Camry
+echo $car->getCarDetails();     // Output: Car: Toyota Camry
 ```
 
 ####  **Benefits of Inheritance**  
@@ -474,6 +476,8 @@ echo $car->getCarDetails(); // Output: Car: Toyota Camry
 - **Better Organization** – Creates hierarchical relationships among classes.  
 - **Scalability** – Easily extend and maintain functionality.  
 - **Encapsulation** – Protects data by allowing controlled access through inherited methods.  
+
+---
 
 ### Practical Exercise: Create a "Vehicle" class and extend it with a "Car" class. Include properties and methods inboth classes, demonstrating inherited behavior.  
 
@@ -519,6 +523,8 @@ class Vehicle
     $vehicle2 = new Vehicle("Honda", "Civic", 2019);
     $vehicle2->displayDetails();    // Vehicle Details: 2019 Honda Civic
 ```
+
+---
 
 ## Overloading
 
@@ -588,38 +594,42 @@ echo MathOperations::multiply(2, 3, 4) . PHP_EOL;      // Output: 24
 - Helps create **dynamic and scalable** class methods.  
 - Reduces repetitive code by handling similar logic within a single function.  
 
+---
+
 ### Practical Exercise: Create a class that demonstrates method overloading by defining multiple methods with the same name but different parameters.
 
 ```php
 class AddNumbers
+{
+    public function __call($methodname, $args)
     {
-        public function __call($methodname, $args)
-        {
-            if ($methodname == 'add') {
-                switch (count($args)) {
-                    case 2:
-                        return $args[0] + $args[1];
-                    case 3:
-                        return $args[0] + $args[1] + $args[2];
-                    case 4:
-                        return $args[0] + $args[1] + $args[2] + $args[3];
-                    default:
-                        return "Invalid number of arguments";
-                }
-            } else {
-                echo "<p>Method does not exist</p>";
+        if ($methodname == 'add') {
+            switch (count($args)) {
+                case 2:
+                    return $args[0] + $args[1];
+                case 3:
+                    return $args[0] + $args[1] + $args[2];
+                case 4:
+                    return $args[0] + $args[1] + $args[2] + $args[3];
+                default:
+                    return "Invalid number of arguments";
             }
+        } else {
+            echo "<p>Method does not exist</p>";
         }
     }
+}
 
-    // Examples
-    $newadd = new AddNumbers();
-    echo "<p>" . $newadd->add(2) . "</p>";                  // Invalid number of arguments
-    echo "<p>" . $newadd->add(25, 35) . "</p>";             // 60
-    echo "<p>" . $newadd->add(10, 20, 30) . "</p>";         // 60
-    echo "<p>" . $newadd->add(20, 40, 60, 80) . "</p>";     // 200
-    echo "<p>" . $newadd->add(15, 25, 35, 45, 55) . "</p>"; // Invalid number of arguments
+// Examples
+$newadd = new AddNumbers();
+echo "<p>" . $newadd->add(2) . "</p>";                  // Invalid number of arguments
+echo "<p>" . $newadd->add(25, 35) . "</p>";             // 60
+echo "<p>" . $newadd->add(10, 20, 30) . "</p>";         // 60
+echo "<p>" . $newadd->add(20, 40, 60, 80) . "</p>";     // 200
+echo "<p>" . $newadd->add(15, 25, 35, 45, 55) . "</p>"; // Invalid number of arguments
 ```
+
+---
 
 ## Abstraction Interface  
 
@@ -789,11 +799,11 @@ class HeavyVehicle implements Vehicle
 }
 // Usage example
 $myCar = new Car("Maruti", "Swift");
-echo "<p>" . $myCar->start() . "</p>"; // Output: Car is starting...
-echo "<p>" . $myCar->stop() . "</p>";  // Output: Car is stopping...
+echo "<p>" . $myCar->start() . "</p>";      // Output: Car is starting...
+echo "<p>" . $myCar->stop() . "</p>";       // Output: Car is stopping...
 $myTruck = new HeavyVehicle("Tata", "4025", "40000");
-echo "<p>" . $myTruck->start() . "</p>"; // Output: Heavy vehicle starting ...
-echo "<p>" . $myTruck->stop() . "</p>"; // Output: Heavy vehicle stopping ...
+echo "<p>" . $myTruck->start() . "</p>";    // Output: Heavy vehicle starting ...
+echo "<p>" . $myTruck->stop() . "</p>";     // Output: Heavy vehicle stopping ...
 ```
 
 ---
@@ -882,9 +892,35 @@ $rect1 = new Rectangle();       // Uses default values
 $rect2 = new Rectangle(8, 12);  // Custom values
 ```
 
+---
+
 ### Practical Exercise: Create a class with a constructor that initializes properties when an object is created.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_07.php">Practical Exercise 07</a>
+```php
+class Car
+{
+    public $make;
+    public $model;
+
+    // Constructor with parameters
+    public function __construct($make = "Maruti", $model = "Swift")
+    {
+        $this->make = $make;
+        $this->model = $model;
+    }
+}
+
+// Creating an object with parameters
+$myCar = new Car("Toyota", "Corolla");
+echo "<p>" . $myCar->make . "</p>";             // Output: Toyota
+echo "<p>" . $myCar->model . "</p>";            // Output: Corolla
+
+$myDefaultCar = new Car();
+echo "<p>" . $myDefaultCar->make . "</p>";      // Output: Maruti
+echo "<p>" . $myDefaultCar->model . "</p>";     // Output: Swift
+```
+
+---
 
 ## Destructor  
 
@@ -917,11 +953,9 @@ class FileHandler {
         $this->file = fopen($filename, "w"); // Open a file
         echo "File opened successfully.\n";
     }
-
     public function write($data) {
         fwrite($this->file, $data); // Write data to the file
     }
-
     // Destructor to close the file
     public function __destruct() {
         fclose($this->file); // Close the file
@@ -951,7 +985,6 @@ class DatabaseConnection {
     public function __construct() {
         echo "Database connection established.\n";
     }
-
     public function __destruct() {
         echo "Database connection closed.\n";
     }
@@ -961,7 +994,6 @@ class Cache {
     public function __construct() {
         echo "Cache initialized.\n";
     }
-
     public function __destruct() {
         echo "Cache cleared.\n";
     }
@@ -983,9 +1015,45 @@ $obj = new FileHandler("test.txt");
 unset($obj); // Destructor is called here to close the file
 ```
 
+---
+
 ### Practical Exercise: Write a class that implements a destructor to perform cleanup tasks when an object is destroyed.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_08.php">Practical Exercise 08</a>
+```php
+class DatabaseConnection
+{
+    public function __construct()
+    {
+        echo "Database connection established.\n";
+    }
+    public function __destruct()
+    {
+        echo "Database connection closed.\n";
+    }
+}
+
+class Cache
+{
+    public function __construct()
+    {
+        echo "Cache initialized.\n";
+    }
+    public function __destruct()
+    {
+        echo "Cache cleared.\n";
+    }
+}
+
+$db = new DatabaseConnection();     // Database connection established.
+echo "<br>"; 
+unset($db);                         // Database connection closed.
+echo "<br>";
+$cache = new Cache();               // Cache initialized.
+echo "<br>";
+unset($cache);                      // Cache cleared.
+```
+
+---
 
 ## Magic Methods
 
@@ -1076,11 +1144,9 @@ unset($obj); // Destructor is called here to close the file
   ```php
   class Product {
       private $data = [];
-
       public function __set($name, $value) {
           $this->data[$name] = strtoupper($value);  // Convert value to uppercase
       }
-
       public function __get($name) {
           return $this->data[$name] ?? null;
       }
@@ -1135,7 +1201,6 @@ unset($obj); // Destructor is called here to close the file
   class Person {
       public $name;
       public $age;
-
       public function __toString() {
           return "Name: {$this->name}, Age: {$this->age}";
       }
@@ -1164,7 +1229,6 @@ unset($obj); // Destructor is called here to close the file
   ```php
   class User {
       private $data = ['username' => 'admin'];
-
       public function __isset($name) {
           return isset($this->data[$name]);
       }
@@ -1180,9 +1244,99 @@ unset($obj); // Destructor is called here to close the file
     - Enforce validation, logging, or transformations on dynamic data.
     - Create flexible, reusable code that can handle unknown or changing inputs.
 
+---
+
 ### Practical Exercise: Create a class that uses magic methods to handle property access and modification dynamically.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_09.php">Practical Exercise 09</a>
+```php
+class User
+{
+    public $fname;
+    public $lname;
+    public $email;
+    private $pwd;
+    public $dob;
+    public function __construct($fname, $lname, $email, $pwd, $dob)
+    {
+        $this->fname = $fname;
+        $this->lname = $lname;
+        $this->email = $email;
+        $this->pwd = $pwd;
+        $this->dob = $dob;
+    }
+    public function __call($name, $args)
+    {
+        if ($name == 'save') {
+            return "Method not found";
+        }
+        return "Method not found";
+    }
+    public function create()
+    {
+        print("User account created...");
+    }
+    public function display()
+    {
+        print_r(array(
+            'fname' => $this->fname,
+            'lname' => $this->lname,
+            'email' => $this->email,
+            'dob' => $this->dob
+        ));
+    }
+}
+
+<form action="" method="post">
+    <table class="table table-bordered border-dark text-center">
+        <tr>
+            <td><label for="fname" class="form-control">First Name</label></td>
+            <td><input type="text" name="fname" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td><label for="lname" class="form-control">Last Name</label></td>
+            <td><input type="text" name="lname" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td><label for="email" class="form-control">Email Address</label></td>
+            <td><input type="email" name="email" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td><label for="pwd" class="form-control">Password</label></td>
+            <td><input type="password" name="pwd" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td><label for="con-pwd" class="form-control">Confirm Password</label></td>
+            <td><input type="password" name="con-pwd" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td><label for="dob" class="form-control">Date of Birth</label></td>
+            <td><input type="date" name="dob" class="form-control" required></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+            <input name="submit" class="btn btn-primary" type="submit" value="submit"/></td>
+        </tr>
+    </table>
+</form>
+
+    if (isset($_REQUEST['submit'])) {
+        $fname = $_REQUEST['fname'];
+        $lname = $_REQUEST['lname'];
+        $email = $_REQUEST['email'];
+        $pwd = $_REQUEST['pwd'];
+        $dob = $_REQUEST['dob'];
+
+        $user = new User($fname, $lname, $email, $pwd, $dob);
+
+        $user->create();        // User account created...
+        echo "<br>";
+        echo $user->saved();    // Method not found
+        echo "<br>";
+        $user->display();       // Array ( [fname] => john [lname] => doe [email] => john@doe.com [dob] => 2020-12-25 )
+    }
+```
+
+---
 
 ## Scope Resolution
 
@@ -1266,7 +1420,6 @@ unset($obj); // Destructor is called here to close the file
   interface MyInterface {
       public static function sayHello();
   }
-
   class MyClass implements MyInterface {
       public static function sayHello() {
           echo "Hello from Interface!";
@@ -1283,7 +1436,6 @@ unset($obj); // Destructor is called here to close the file
           echo "Hello from Trait!";
       }
   }
-
   class MyClass {
       use MyTrait;
   }
@@ -1297,7 +1449,6 @@ unset($obj); // Destructor is called here to close the file
   ```php
   class MyClass {
       public static $name = "MyClass";
-
       public static function display() {
           echo "Class Name: " . self::$name;
       }
@@ -1306,9 +1457,26 @@ unset($obj); // Destructor is called here to close the file
   MyClass::display();  // Output: Class Name: MyClass
   ```
 
+---
+
 ### Practical Exercise: Create a class with static properties and methods, and demonstrate their access using the scope resolution operator.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_10.php">Practical Exercise 10</a>
+```php
+class MyClass
+{
+    public static $greeting = "Hello";
+
+    public static function greet()
+    {
+        echo self::$greeting . ", World!";
+    }
+}
+
+echo MyClass::$greeting;    // Hello
+MyClass::greet();           // Hello, World!
+```
+
+---
 
 ## Traits
 
@@ -1524,9 +1692,37 @@ $obj->callMethods();
 
 3. **No Constructors**: Traits cannot have constructors or destructors, so they can't be used to manage the initialization or cleanup of objects. However, methods inside the trait can be used for such purposes.
 
+---
+
 ### Practical Exercise: Create two traits and use them in a class to demonstrate how to include multiple behaviors.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_11.php">Practical Exercise 11</a>
+```php
+trait TraitA
+{
+    public function greetA()
+    {
+        echo "Hello from Trait A\n";
+    }
+}
+trait TraitB
+{
+    public function greetB()
+    {
+        echo "Hello from Trait B\n";
+    }
+}
+class MyClass
+{
+    use TraitA, TraitB;
+}
+
+$obj1 = new MyClass();
+    
+echo $obj1->greetA(); // Hello from Trait A
+echo $obj1->greetB(); // Hello from Trait B
+```
+
+---
 
 ## Visibility
 
@@ -1615,9 +1811,79 @@ echo $obj->getMessage();  // ✅ Allowed via public method in subclass
 - **Private** → When data should be completely encapsulated (e.g., sensitive information, internal logic).
 - **Protected** → When you want to allow access within the class and subclasses, but prevent direct access from outside.
 
+---
+
 ### Practical Exercise: Write a class that shows examples of each visibility type and how they restrict access to properties and methods.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_12.php">Practical Exercise 12</a>
+```php
+class MyClass
+{
+    public $propPublic = "This is a public property";
+    protected $propProtected = "This is a protected property";
+    private $propPrivate = "This is a private property";
+    public function metPublic()
+    {
+        return "This is a public method";
+    }
+    protected function metProtected()
+    {
+        return "This is a protected method";
+    }
+    private function metPrivate()
+    {
+        return "This is a private method";
+    }
+
+    public function getPropProtected()
+    {
+        return $this->propProtected;
+    }
+    public function getPropPrivate()
+    {
+        return $this->propPrivate;
+    }
+
+    public function runMetProtected()
+    {
+        return $this->metProtected();
+    }
+    public function runMetPrivate()
+    {
+        return $this->metPrivate();
+    }
+}
+
+class MyChildClass extends MyClass {}
+$obj = new MyClass();
+$obj2 = new MyChildClass();
+
+echo $obj->propPublic;              // This is a public property
+echo $obj->propProtected;           // Fatal Error
+echo $obj->getPropProtected();      // This is a protected property
+echo $obj->propPrivate;             // Fatal Error
+echo $obj->getPropPrivate();        // This is a private property
+
+echo $obj->metPublic();             // This is a public method
+echo $obj->metProtected();          // Fatal Error
+echo $obj->runMetProtected();       // This is a protected method
+echo $obj->metPrivate();            // Fatal Error
+echo $obj->runMetPrivate();         // This is a private method
+
+echo $obj2->propPublic;             // This is a public property
+echo $obj2->propProtected;          // Fatal Error
+echo $obj2->getPropProtected();     // This is a protected property
+echo $obj2->propPrivate;            // Fatal Error
+echo $obj2->getPropPrivate();       // This is a private property
+
+echo $obj2->metPublic();             // This is a public method
+echo $obj2->metProtected();          // Fatal Error
+echo $obj2->runMetProtected();       // This is a protected method
+echo $obj2->metPrivate();            // Fatal Error
+echo $obj2->runMetPrivate();         // This is a private method
+
+```
+
+---
 
 ## Type Hinting
 
@@ -1742,9 +2008,43 @@ echo processData(100);  // Data: 100
 - **Performance Optimization:** Helps PHP optimize function calls.  
 - **Easier Refactoring:** Reduces the risk of breaking changes.  
 
+---
+
 ### Practical Exercise: Write a method in a class that accepts type-hinted parameters and demonstrate how it works with different data types. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_13.php">Practical Exercise 13</a>
+```php
+class User
+{
+    public int $id;
+    public string $name;
+    public string $email;
+    public int $phone;
+    public float $weight;
+    public float $height;
+
+    public function __construct(int $id, string $name, string $email, int $phone, float $weight, float $height)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->weight = $weight;
+        $this->height = $height;
+    }
+}
+
+$user = new User(1, "Tom", "tom@email.com", 9998887777, 65.84, 143.29);
+
+echo $user->id;         // 1
+echo $user->name;       // Tom
+echo $user->email;      // tom@email.com
+echo $user->phone;      // 9998887777
+echo $user->weight;     // 65.84
+echo $user->height;     // 143.29
+
+```
+
+---
 
 ## Final Keyword
 
@@ -1799,9 +2099,34 @@ final class Utility {
 
 However, overusing `final` can reduce flexibility, making code less extendable. It is best used when you want to enforce strict behavior in core logic.
 
+---
+
 ### Practical Exercise: Create a class marked as final and attempt to extend it to show the restriction. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_14.php">Practical Exercise 14</a>
+```php
+final class RestClass
+{
+    function message()
+    {
+        echo "This is a method from final class";
+    }
+}
+class DerivedClass extends RestClass
+{
+    function message()
+    {
+        echo "changes with child class of a final class";
+    }
+}
+
+$obj = new RestClass();
+$obj1 = new DerivedClass();
+
+echo $obj->message();       // This is a method from final class
+echo $obj1->message();      // Fatal error: Class DerivedClass cannot extend final class RestClass
+```
+
+---
 
 ## Email Security Function
 
@@ -1847,9 +2172,53 @@ However, overusing `final` can reduce flexibility, making code less extendable. 
 
 By following these best practices, organizations and individuals can significantly reduce the risks associated with email-based threats.
 
+---
+
 ### Practical Exercise: Write a function that sanitizes email input and validates it before sending. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_15.php">Practical Exercise 15</a>
+```php
+function sendSafeEmail($email, $subject, $message)
+{
+    // Step 1: Sanitize email input
+    $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+
+    // Step 2: Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Invalid email format.";
+    }
+
+    // Step 3: Prevent Header Injection
+    if (preg_match("/(\r|\n)/", $email) || preg_match("/(\r|\n)/", $subject)) {
+        return "Email headers contain invalid characters.";
+    }
+
+    // Step 4: Prepare email headers
+    $headers = "From: no-reply@example.com\r\n";
+    $headers .= "Reply-To: no-reply@example.com\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+    // Step 5: Send email securely
+    if (mail($email, $subject, $message, $headers)) {
+        return "Email sent successfully to $email.";
+    } else {
+        return "Failed to send email.";
+    }
+}
+// Example usage
+echo sendSafeEmail("test@example.com", "Welcome!", "Hello, welcome to our platform!");
+
+// To: test@example.com
+// Subject: Welcome!
+// From: no-reply@example.com
+// Reply-To: no-reply@example.com
+// MIME-Version: 1.0
+// Content-Type: text/plain; charset=UTF-8
+// Hello, welcome to our platform!
+
+```
+
+---
 
 ## File Handling
 
@@ -1971,9 +2340,27 @@ if (file_exists("example.txt")) {
 - PHP provides powerful file-handling functions to open, read, write, and close files efficiently.  
 - Always handle files carefully, especially when writing or deleting, to avoid data loss.
 
+---
+
 ### Practical Exercise: Create a script that reads from a text file and displays its content on a web page.
 
-- <a href="./practical_exe_files/filelist/practical_exe_16.php">Practical Exercise 16</a>
+```php
+// Define the file path
+$file = 'index.txt';
+
+// Check if the file exists
+if (file_exists($file)) {
+    // Read the file content
+    $content = file_get_contents($file);
+} else {
+    $content = "File not found.";
+}
+?>
+
+echo htmlspecialchars($content); // This is text from index.txt file.
+```
+
+---
 
 ## Handling Emails
 
@@ -2014,6 +2401,7 @@ if (mail($to, $subject, $message, $headers)) {
 
 #### **3. Using Additional Headers**
 - You can add extra headers, such as `Reply-To`, `CC`, `BCC`, and `Content-Type`:
+
 ```php
 <?php
 $to = "recipient@example.com";
@@ -2110,9 +2498,26 @@ try {
 - Always **validate email addresses** before sending.  
 - Use **PHPMailer** for advanced email handling, including SMTP authentication and HTML emails.
 
+---
+
 ### Practical Exercise: Write a PHP script to send a test email to a user using the mail() function.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_17.php">Practical Exercise 17</a>
+```php
+$to = "recipient@example.com"; 
+$subject = "Test Email from PHP";
+$message = "This is a test email sent using PHP's mail() function.";
+$headers = "From: sender@example.com" . "\r\n" .
+           "Reply-To: sender@example.com" . "\r\n" .
+           "X-Mailer: PHP/" . phpversion();
+
+if(mail($to, $subject, $message, $headers)) {
+    echo "Email sent successfully to $to";
+} else {
+    echo "Failed to send email.";
+}
+```
+
+---
 
 ## MVC Architecture
 
@@ -2196,15 +2601,170 @@ require 'user_view.php'; // Load the view
 - MVC is a **powerful architecture** that enhances code **organization, maintainability, and scalability** in web development.  
 - If you're building large applications, using an MVC framework like Laravel can significantly improve development efficiency.
 
+---
+
 ### Practical Exercise: Create a simple MVC application that demonstrates the separation of concerns by implementing a basic "User" module with a model, view, and controller.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_18.php">Practical Exercise 18</a>
+```php
+├── mvc_app/
+│   ├── index.php
+│   ├── controllers/
+│   │   ├── UserController.php
+│   ├── models/
+│   │   ├── User.php
+│   ├── views/
+│   │   ├── user_view.php
+
+// index.php
+<?php
+require_once 'controllers/UserController.php';
+$controller = new UserController();
+$controller->index();
+?>
+
+// models/User.php
+<?php
+class User {
+    public function getUsers() {
+        return [
+            ["id" => 1, "name" => "John Doe", "email" => "john@example.com"],
+            ["id" => 2, "name" => "Jane Doe", "email" => "jane@example.com"]
+        ];
+    }
+}
+?>
+
+// controllers/UserController.php
+<?php
+require_once 'models/User.php';
+
+class UserController {
+    public function index() {
+        $userModel = new User();
+        $users = $userModel->getUsers();
+        require 'views/user_view.php';
+    }
+}
+?>
+
+// views/user_view.php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <ul>
+        <?php foreach ($users as $user): ?>
+            <li><?php echo $user['name'] . " (" . $user['email'] . ")"; ?></li>
+        <?php endforeach; ?>
+    </ul>
+</body>
+</html>
+
+```
+
+---
 
 ## Practical Example: Implementation of all the OOPs Concepts
 
 ### Practical Exercise: Develop a mini project (e.g., a Library Management System) that utilizes all OOP concepts like classes, inheritance, interfaces, magic methods, etc. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_19.php">Practical Exercise 19</a>
+```php
+├── library_system/
+│   ├── index.php
+│   ├── classes/
+│   │   ├── Book.php
+│   │   ├── Member.php
+│   │   ├── Library.php
+│   │   ├── LibraryItem.php
+│   │   ├── Borrowable.php
+
+// classes/LibraryItem.php
+abstract class LibraryItem {
+    protected $title;
+    protected $author;
+    public function __construct($title, $author) {
+        $this->title = $title;
+        $this->author = $author;
+    }
+    abstract public function getDescription();
+}
+
+// classes/Borrowable.php
+interface Borrowable {
+    public function borrowItem($memberName);
+    public function returnItem();
+}
+
+// classes/Book.php
+require_once 'LibraryItem.php';
+require_once 'Borrowable.php';
+
+class Book extends LibraryItem implements Borrowable {
+    private $isBorrowed = false;
+    public function getDescription() {
+        return "Book: {$this->title} by {$this->author}";
+    }
+    public function borrowItem($memberName) {
+        if (!$this->isBorrowed) {
+            $this->isBorrowed = true;
+            echo "$memberName borrowed '{$this->title}'.\n";
+        } else {
+            echo "This book is already borrowed.\n";
+        }
+    }
+    public function returnItem() {
+        $this->isBorrowed = false;
+        echo "Book '{$this->title}' returned.\n";
+    }
+}
+
+// classes/Member.php
+class Member {
+    private $name;
+    public function __construct($name) {
+        $this->name = $name;
+    }
+    public function getName() {
+        return $this->name;
+    }
+}
+
+// classes/Library.php
+class Library {
+    private $items = [];
+    public function addItem(LibraryItem $item) {
+        $this->items[] = $item;
+    }
+    public function listItems() {
+        foreach ($this->items as $item) {
+            echo $item->getDescription() . "\n";
+        }
+    }
+}
+
+// index.php
+require_once 'classes/Book.php';
+require_once 'classes/Member.php';
+require_once 'classes/Library.php';
+
+$library = new Library();
+$book1 = new Book("1984", "George Orwell");
+$book2 = new Book("To Kill a Mockingbird", "Harper Lee");
+$member = new Member("Alice");
+
+$library->addItem($book1);
+$library->addItem($book2);
+$library->listItems();
+
+$book1->borrowItem($member->getName());
+$book1->returnItem();
+
+```
+
+---
 
 ## Connection with MySQL Database
 
@@ -2223,7 +2783,6 @@ require 'user_view.php'; // Load the view
 #### **(A) `mysqli` Procedural Connection**
 
 ```php
-<?php
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -2237,7 +2796,6 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 echo "Connected successfully!";
-?>
 ```
 
 **✅ Pros:** Simple and easy to use.  
@@ -2245,7 +2803,6 @@ echo "Connected successfully!";
 
 #### **(B) `mysqli` Object-Oriented Connection**
 ```php
-<?php
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -2259,7 +2816,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 echo "Connected successfully!";
-?>
 ```
 **✅ Pros:** More structured and reusable.  
 **❌ Cons:** Still limited compared to `PDO`.
@@ -2269,7 +2825,6 @@ echo "Connected successfully!";
 
 #### **(A) `PDO` Connection**
 ```php
-<?php
 $dsn = "mysql:host=localhost;dbname=test_db;charset=utf8mb4";
 $username = "root";
 $password = "";
@@ -2284,7 +2839,6 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-?>
 ```
 **✅ Pros:**  
 - Supports multiple databases (MySQL, PostgreSQL, SQLite, etc.).  
@@ -2364,9 +2918,31 @@ try {
 - **`mysqli`** is good for simple MySQL applications but lacks flexibility.  
 - **`PDO`** is the recommended choice due to **better security, multi-database support, and prepared statements**.  
 
+---
+
 ### Practical Exercise: Write a script to establish a database connection and handle any errors during the connection process.
 
-- <a href="./practical_exe_files/filelist/practical_exe_20.php">Practical Exercise 20</a>
+```php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} else {
+    echo "Connected successfully";
+}
+
+// Close connection
+$conn->close();
+```
+
+---
 
 ## SQL Injection
 
@@ -2384,7 +2960,6 @@ try {
 #### **Example of a Vulnerable PHP Code (Using `mysqli`)**
 
 ```php
-<?php
 $conn = new mysqli("localhost", "root", "", "test_db");
 
 $username = $_GET['username']; // User input from URL: ?username=admin
@@ -2398,7 +2973,6 @@ if ($result->num_rows > 0) {
 } else {
     echo "Invalid credentials!";
 }
-?>
 ```
 
 #### **🚨 SQL Injection Attack**
@@ -2494,39 +3068,306 @@ SELECT * FROM users WHERE username = 'admin' -- ' AND password = 'anything'
 - **Use least privilege** database accounts.  
 - **Disable error messages** in production.  
 
+---
+
 ### Practical Exercise: Demonstrate a vulnerable SQL query and then show how to prevent SQL injection using prepared statements. 
 
-- <a href="./practical_exe_files/filelist/practical_exe_21.php">Practical Exercise 21</a>
+```php
+// Vulnerable SQL query (Prone to SQL Injection)
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$user_input = $_GET['username']; // Simulated user input
+$query = "SELECT * FROM users WHERE username = '$user_input'";
+$result = $conn->query($query);
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "User: " . $row['username'] . "<br>";
+    }
+} else {
+    echo "No user found.";
+}
+
+$conn->close();
+
+// Secure version using prepared statements
+$conn = new mysqli($servername, $username, $password, $database);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->bind_param("s", $user_input);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        echo "User: " . $row['username'] . "<br>";
+    }
+} else {
+    echo "No user found.";
+}
+
+$stmt->close();
+$conn->close();
+```
+
+---
 
 ## Practical: Exception Handling with Try-Catch for Database Connection and Queries  
 
-- <a href="./practical_exe_files/filelist/practical_exe_22.php">Practical Exercise 22</a>
+```php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+
+try {
+    // Create connection using PDO
+    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    // Set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully";
+
+    // Example query execution with exception handling
+    try {
+        $stmt = $conn->prepare("SELECT * FROM users");
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($result as $row) {
+            echo "User: " . $row['username'] . "<br>";
+        }
+    } catch (PDOException $e) {
+        echo "Query failed: " . $e->getMessage();
+    }
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+```
+
+---
 
 ### Practical Exercise: Implement try-catch blocks in a PHP script to handle exceptions for database connection and query execution.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_23.php">Practical Exercise 23</a>
+```php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "test_db";
+
+try {
+    // Create connection using PDO
+    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    // Set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully";
+
+    try {
+        // Example query execution with exception handling
+        $stmt = $conn->prepare("SELECT * FROM users");
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            foreach ($result as $row) {
+                echo "User: " . htmlspecialchars($row['username']) . "<br>";
+            }
+        } else {
+            echo "No users found.";
+        }
+    } catch (PDOException $e) {
+        echo "Query failed: " . $e->getMessage();
+    }
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+} finally {
+    $conn = null; // Close the connection
+}
+```
+
+---
 
 ## Server-Side Validation while Registration using Regular Expressions 
 
 ### Practical Exercise: Write a registration form that validates user input (e.g., email, password) using regular expressions before submission.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_24.php">Practical Exercise 24</a>
+```php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+</head>
+<body>
+    <form method="post" action="">
+        Email: <input type="text" name="email" required><br>
+        Password: <input type="password" name="password" required><br>
+        <input type="submit" name="submit" value="Register">
+    </form>
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $email_pattern = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
+        $password_pattern = "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"; // Min 8 chars, 1 letter, 1 number
+
+        if (!preg_match($email_pattern, $email)) {
+            echo "Invalid email format.<br>";
+        }
+
+        if (!preg_match($password_pattern, $password)) {
+            echo "Password must be at least 8 characters long and contain at least one letter and one number.<br>";
+        }
+
+        if (preg_match($email_pattern, $email) && preg_match($password_pattern, $password)) {
+            echo "Registration successful!";
+        }
+    }
+</body>
+</html>
+
+```
+
+---
 
 ## Send Mail While Registration
 
 ### Practical Exercise: Extend the registration form to send a confirmation email upon successful registration.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_25.php">Practical Exercise 25</a>
+```php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+</head>
+<body>
+    <form method="post" action="">
+        Email: <input type="text" name="email" required><br>
+        Password: <input type="password" name="password" required><br>
+        <input type="submit" name="submit" value="Register">
+    </form>
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $email_pattern = "/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/";
+        $password_pattern = "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/"; // Min 8 chars, 1 letter, 1 number
+
+        if (!preg_match($email_pattern, $email)) {
+            echo "Invalid email format.<br>";
+        }
+
+        if (!preg_match($password_pattern, $password)) {
+            echo "Password must be at least 8 characters long and contain at least one letter and one number.<br>";
+        }
+
+        if (preg_match($email_pattern, $email) && preg_match($password_pattern, $password)) {
+            echo "Registration successful!";
+            
+            // Send confirmation email
+            $to = $email;
+            $subject = "Registration Confirmation";
+            $message = "Thank you for registering. Your registration is successful.";
+            $headers = "From: noreply@example.com";
+            
+            if (mail($to, $subject, $message, $headers)) {
+                echo " A confirmation email has been sent to your email address.";
+            } else {
+                echo " Failed to send confirmation email.";
+            }
+        }
+    }
+</body>
+</html>
+```
+
+---
 
 ## Session and Cookies
 
 ### THEORY EXERCISE: Explain the differences between sessions and cookies in PHP.
 
+#### **Differences Between Sessions and Cookies in PHP**
 
+Sessions and cookies are both used to store user-related data, but they work in different ways and serve different purposes.
+
+| Feature        | Sessions | Cookies |
+|---------------|---------|---------|
+| **Storage Location** | Stored on the server | Stored on the user's browser |
+| **Persistence** | Ends when the browser is closed (unless configured otherwise) | Can persist for a long time based on expiration settings |
+| **Security** | More secure as data is stored on the server | Less secure as data is stored on the client-side and can be modified |
+| **Capacity** | No storage limit (depends on server memory) | Typically limited to 4KB per cookie |
+| **Access Method** | Accessed via `$_SESSION` | Accessed via `$_COOKIE` |
+| **Lifetime Control** | Can be destroyed using `session_destroy()` | Can be set to expire at a specific time using `setcookie()` |
+| **Use Case** | Used for storing sensitive data like login credentials or user preferences | Used for storing less critical data like user preferences, tracking, or remembering login sessions |
+
+#### **How They Work in PHP**
+
+**1. Sessions**
+Sessions store data on the server and assign a unique session ID to each user. This session ID is sent to the user's browser via a cookie (PHPSESSID) to maintain state.
+
+**Example of Using a Session:**
+```php
+session_start(); // Start the session
+$_SESSION['user'] = 'Nirav'; // Store a value
+echo $_SESSION['user']; // Retrieve session data
+```
+
+**2. Cookies**
+Cookies store data in the user's browser and can be accessed on subsequent visits.
+
+**Example of Setting a Cookie:**
+```php
+setcookie("user", "Nirav", time() + 3600, "/"); // Expires in 1 hour
+echo $_COOKIE['user']; // Retrieve cookie data
+```
+
+**When to Use**
+- **Use sessions** when you need to store sensitive data like user authentication details.
+- **Use cookies** when you need to store non-sensitive, persistent data like user preferences.
+
+---
 
 ### Practical Exercise: Write a script to create a session and store user data, and then retrieve it on a different page. Also, demonstrate how to set and retrieve a cookie.  
 
-- <a href="./practical_exe_files/filelist/practical_exe_26.php">Practical Exercise 26</a>
+```php
+
+session_start();
+
+// Set session and cookie
+$_SESSION['user'] = "John Doe";
+setcookie("user", "John Doe", time() + 3600, "/"); // 1-hour expiry
+
+// Retrieve and display session and cookie data
+echo "<h2>Session and Cookie Data</h2>";
+if (isset($_SESSION['user'])) {
+    echo "Session User: " . $_SESSION['user'] . "<br>";
+} else {
+    echo "No session data found.<br>";
+}
+
+if (isset($_COOKIE['user'])) {
+    echo "Cookie User: " . $_COOKIE['user'] . "<br>";
+} else {
+    echo "No cookie found.<br>";
+}
+
+<a href="<?php echo $_SERVER['PHP_SELF']; ?>">Refresh Page</a>
+
+```
+
+---
 
 ## File Upload
 

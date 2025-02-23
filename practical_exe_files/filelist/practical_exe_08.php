@@ -15,7 +15,6 @@
         {
             echo "Database connection established.\n";
         }
-
         public function __destruct()
         {
             echo "Database connection closed.\n";
@@ -28,22 +27,19 @@
         {
             echo "Cache initialized.\n";
         }
-
         public function __destruct()
         {
             echo "Cache cleared.\n";
         }
     }
 
-    $db = new DatabaseConnection();
+    $db = new DatabaseConnection(); // Database connection established.
+    echo "<br>"; 
+    unset($db); // Database connection closed.
     echo "<br>";
-    unset($db);
-
+    $cache = new Cache(); // Cache initialized.
     echo "<br>";
-
-    $cache = new Cache();
-    echo "<br>";
-    unset($cache);
+    unset($cache); // Cache cleared.
 
     ?>
 

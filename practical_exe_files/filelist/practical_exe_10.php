@@ -19,12 +19,9 @@
         }
     }
 
-
-
     ?>
 
     <p><?php echo MyClass::$greeting; ?></p>
-
     <p><?php MyClass::greet(); ?></p>
 
 </div>

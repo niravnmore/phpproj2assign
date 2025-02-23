@@ -16,9 +16,7 @@
             echo "This is a method from final class";
         }
     }
-
-    class DerClass
-    // extends RestClass
+    class DerClass extends RestClass
     {
         function message()
         {
@@ -27,13 +25,10 @@
     }
 
     $obj = new RestClass();
-
     $obj1 = new DerClass();
 
     ?>
-
     <p><?php echo $obj->message(); ?></p>
-
     <p><?php echo $obj1->message(); ?></p>
 
 </div>

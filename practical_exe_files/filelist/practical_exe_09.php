@@ -11,7 +11,6 @@
         public $email;
         private $pwd;
         public $dob;
-
         public function __construct($fname, $lname, $email, $pwd, $dob)
         {
             $this->fname = $fname;
@@ -20,7 +19,6 @@
             $this->pwd = $pwd;
             $this->dob = $dob;
         }
-
         public function __call($name, $args)
         {
             if ($name == 'save') {
@@ -28,19 +26,10 @@
             }
             return "Method not found";
         }
-
         public function create()
         {
-            /*
-            $dbquery = "INSERT INTO users ('fname', 'lname', 'email', 'pwd', 'dob') 
-            VALUES ($this->fname, $this->lname, $this->email, $this->pwd, $this->dob);";
-
-            return $dbquery;
-
-            */
             print("User account created...");
         }
-
         public function display()
         {
             print_r(array(

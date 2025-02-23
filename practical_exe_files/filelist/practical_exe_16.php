@@ -10,7 +10,7 @@
 
 
     // Define the file path
-    $file = 'index.php';
+    $file = 'index.txt';
 
     // Check if the file exists
     if (file_exists($file)) {

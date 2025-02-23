@@ -8,7 +8,7 @@
 
     echo "<h4>Write a method in a class that accepts type-hinted parameters and demonstrate howit works with different data types.</h4>";
 
-    class UserM
+    class User
     {
         public int $id;
         public string $name;
@@ -28,7 +28,7 @@
         }
     }
 
-    $user = new UserM(1, "Tom", "tom@email.com", 9998887777, 65.84, 143.29);
+    $user = new User(1, "Tom", "tom@email.com", 9998887777, 65.84, 143.29);
 
     ?>
 
